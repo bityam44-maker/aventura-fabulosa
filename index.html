@@ -89,7 +89,7 @@
       box-shadow:0 8px 0 rgba(0,0,0,.18); 
     } 
 
-    /* ÚNICO REPRODUCTOR EN LA PORTADA */
+    /* REPRODUCTOR DESTACADO EN LA PORTADA */
     .tarjeta-video-principal { 
       background: var(--blanco); 
       border-radius: 24px; 
@@ -232,10 +232,10 @@
       <h2>¡Aprender también es una aventura!</h2> 
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p> 
       
-      <!-- ÚNICO REPRODUCTOR EN LA PORTADA -->
-      <article class="tarjeta-video-principal">
-        <h3 id="titulo-video-principal">Cargando video principal...</h3>
-        <p id="desc-video-principal"></p>
+      <!-- REPRODUCTOR ÚNICO PRINCIPAL (SIN MENSAJES DE CARGA ANTESTÉTICOS) -->
+      <article class="tarjeta-video-principal" id="tarjeta-video-principal">
+        <h3 id="titulo-video-principal" style="display:none;"></h3>
+        <p id="desc-video-principal" style="display:none;"></p>
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
@@ -255,6 +255,7 @@
       </div> 
     </section> 
 
+    <!-- SECCIÓN DE MINIJUEGOS CON CONTENIDO DIFERENTE POR PESTAÑA -->
     <section class="juego" id="juegos"> 
       <div class="contenedor"> 
         <h2 class="titulo-seccion">¡Zona de minijuegos!</h2> 
@@ -265,11 +266,11 @@
           <button class="pestana" data-juego="j4" type="button">🎨 Crear</button> 
           <button class="pestana" data-juego="j5" type="button">🌙 Soñar</button> 
         </div> 
-        <div class="panel marco" id="j1"><iframe title="Leer" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j2" hidden><iframe title="Jugar" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j3" hidden><iframe title="Descubrir" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j4" hidden><iframe title="Crear" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j5" hidden><iframe title="Soñar" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j1"><iframe title="Sopa de Letras - Leer" src="https://es.educaplay.com/recursos-educativos/tipo/sopa-de-letras/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j2" hidden><iframe title="Juegos de Memoria" src="https://es.educaplay.com/recursos-educativos/tipo/memoria/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j3" hidden><iframe title="Adivinanzas - Descubrir" src="https://es.educaplay.com/recursos-educativos/tipo/adivinanza/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j4" hidden><iframe title="Crucigramas - Crear" src="https://es.educaplay.com/recursos-educativos/tipo/crucigrama/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j5" hidden><iframe title="Completar Textos - Soñar" src="https://es.educaplay.com/recursos-educativos/tipo/completar/" loading="lazy" allowfullscreen></iframe></div> 
       </div> 
     </section> 
 
@@ -297,7 +298,7 @@
   <script> 
     document.getElementById("anio").textContent = new Date().getFullYear(); 
     
-    // Control de pestañas de juegos
+    // Cambiar pestañas
     document.querySelectorAll(".pestana").forEach(p => { 
       p.addEventListener("click", () => { 
         document.querySelectorAll(".pestana").forEach(x => x.classList.remove("activa")); 
@@ -344,19 +345,23 @@
         const datos = await respuesta.json();
 
         if (!datos || datos.length === 0) {
-          tituloElem.textContent = "¡Bienvenido a Aventura Fabulosa!"; 
-          visor.innerHTML = '<p style="color:#fff; padding:3rem; text-align:center;">Pronto publicaremos un nuevo video aquí.</p>'; 
+          document.getElementById('tarjeta-video-principal').style.display = 'none';
           return;
         }
 
         const video = datos[0];
-        tituloElem.textContent = video.titulo || 'Video Destacado'; 
-        descElem.textContent = video.descripcion || ''; 
+        if (video.titulo) {
+          tituloElem.textContent = video.titulo;
+          tituloElem.style.display = 'block';
+        }
+        if (video.descripcion) {
+          descElem.textContent = video.descripcion;
+          descElem.style.display = 'block';
+        }
         mostrarEnContenedor(video.url, visor);
 
       } catch (e) {
-        tituloElem.textContent = "¡Bienvenido a Aventura Fabulosa!"; 
-        visor.innerHTML = '<p style="color:#fff; padding:3rem; text-align:center;">Disfruta de nuestros juegos y recursos.</p>'; 
+        document.getElementById('tarjeta-video-principal').style.display = 'none';
       }
     }
 
