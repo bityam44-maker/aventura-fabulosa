@@ -22,14 +22,12 @@ async function avCargarPublicados() {
   if (!zona) return;
   
   try {
-    const r = await AV_DB.from('recursos').select('id,tipo,categoria,titulo,descripcion,url,imagen_url').eq('publicado', true).order('creado_en', { ascending: false });
+    const r = await AV_DB.from('recursos').select('*').eq('publicado', true).order('creado_en', { ascending: false });
     if (r.error || !r.data || !r.data.length) return;
     
     r.data.forEach(x => {
       const art = document.createElement('article');
       art.className = 'tarjeta';
-      
-      // Validamos que el tipo sea 'video' para usar el reproductor, tal como lo tenías funcionando
       const emb = (x.tipo === 'video') ? avUniversalEmbed(x.url) : null;
       
       art.innerHTML = '<h3>' + x.titulo + '</h3>' + 
@@ -44,7 +42,7 @@ async function avCargarPublicados() {
       }
     });
   } catch (err) {
-    console.error("Error al cargar de Supabase:", err);
+    console.error("Error:", err);
   }
 }
 
