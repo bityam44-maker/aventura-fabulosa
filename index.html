@@ -89,7 +89,6 @@
       box-shadow: 0 8px 0 rgba(0,0,0,.18); 
     }
 
-    /* TARJETA DEL VIDEO DESTACADO EN LA PORTADA */
     .tarjeta-video-principal { 
       background: var(--blanco); 
       border-radius: 24px; 
@@ -221,7 +220,6 @@
       <h2>¡Aprender también es una aventura!</h2>
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p>
       
-      <!-- REPRODUCTOR ÚNICO PRINCIPAL DE SUPABASE -->
       <article class="tarjeta-video-principal" id="tarjeta-video-principal">
         <h3 id="titulo-video-principal" style="display:none;"></h3>
         <p id="desc-video-principal" style="display:none;"></p>
@@ -271,8 +269,7 @@
   </main>
 
   <footer>
-    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios.</p>
-    <p><a href="https://es.educaplay.com/" target="_blank" rel="noopener">Educaplay</a> <a href="https://es.khanacademy.org/" target="_blank" rel="noopener">Khan Academy</a> <a href="#inicio">Volver arriba</a></p>
+    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
   </footer>
 
   <script>
@@ -313,10 +310,14 @@
       const descElem = document.getElementById('desc-video-principal');
 
       try {
-        const urlAPI = 'https://onnzstykkintecvfkauz.supabase.co/rest/v1/recursos?publicado=eq.true&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
+        const URL_SUPABASE = 'AQUÍ_VA_TU_URL_DE_SUPABASE'; 
+        const API_KEY_SUPABASE = 'AQUÍ_VA_TU_API_KEY_DE_SUPABASE'; 
+
+        const urlAPI = URL_SUPABASE + '/rest/v1/recursos?publicado=eq.true&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
+        
         const respuesta = await fetch(urlAPI, {
           headers: {
-            'apikey': 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH'
+            'apikey': API_KEY_SUPABASE
           }
         });
 
