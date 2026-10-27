@@ -220,18 +220,10 @@
       <h2>¡Aprender también es una aventura!</h2>
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p>
       
-      <!-- ESPACIO 1: Video del Día -->
-      <article class="tarjeta-video-principal" id="tarjeta-video-principal" style="display:none;">
-        <h3 id="titulo-video-principal"></h3>
-        <p id="desc-video-principal"></p>
+      <article class="tarjeta-video-principal" id="tarjeta-video-principal">
+        <h3 id="titulo-video-principal" style="display:none;"></h3>
+        <p id="desc-video-principal" style="display:none;"></p>
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
-      </article>
-
-      <!-- ESPACIO 2: Juego del Día -->
-      <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
-        <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
-        <p id="desc-juego-principal"></p>
-        <div class="contenedor-video-unico" id="visor-juego-principal"></div>
       </article>
 
       <a class="boton" href="#juegos">¡Quiero jugar!</a>
@@ -277,8 +269,7 @@
   </main>
 
   <footer>
-    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por Lcda. Ileana Ríos.</p>
-    <p><a href="https://es.educaplay.com/" target="_blank" rel="noopener">Educaplay</a> <a href="https://es.khanacademy.org/" target="_blank" rel="noopener">Khan Academy</a> <a href="#inicio">Volver arriba</a></p>
+    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
   </footer>
 
   <script>
@@ -309,58 +300,52 @@
       if (info.tipo === "directo") { 
         contenedor.innerHTML = '<video src="' + info.src + '" controls playsinline style="width:100%;height:100%;"></video>'; 
       } else { 
-        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Recurso" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
+        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Video" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
       } 
     } 
 
-    async function cargarRecursosSupabase() {
-      const URL_SUPABASE = 'https://onnzstykkintecvfkauz.supabase.co';
-      const API_KEY_SUPABASE = 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH';
+    async function cargarVideoPrincipalSupabase() {
+      const visor = document.getElementById('visor-video-principal'); 
+      const tituloElem = document.getElementById('titulo-video-principal');
+      const descElem = document.getElementById('desc-video-principal');
 
       try {
-        const urlAPI = URL_SUPABASE + '/rest/v1/recursos?publicado=eq.true&select=tipo,titulo,descripcion,url&order=creado_en.desc';
+        const URL_SUPABASE = 'AQUÍ_VA_TU_URL_DE_SUPABASE'; 
+        const API_KEY_SUPABASE = 'AQUÍ_VA_TU_API_KEY_DE_SUPABASE'; 
+
+        const urlAPI = URL_SUPABASE + '/rest/v1/recursos?publicado=eq.true&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
+        
         const respuesta = await fetch(urlAPI, {
-          headers: { 'apikey': API_KEY_SUPABASE }
+          headers: {
+            'apikey': API_KEY_SUPABASE
+          }
         });
 
-        if (!respuesta.ok) return;
+        if (!respuesta.ok) throw new Error('Error al conectar');
         const datos = await respuesta.json();
-        if (!datos || datos.length === 0) return;
 
-        // 1. CARGAR VIDEO DEL DÍA
-        const video = datos.find(r => r.tipo === 'video' || !r.tipo);
-        if (video) {
-          const tarjetaVideo = document.getElementById('tarjeta-video-principal');
-          const tituloVid = document.getElementById('titulo-video-principal');
-          const descVid = document.getElementById('desc-video-principal');
-          const visorVid = document.getElementById('visor-video-principal');
-
-          if (video.titulo) tituloVid.textContent = video.titulo;
-          if (video.descripcion) descVid.textContent = video.descripcion;
-          mostrarEnContenedor(video.url, visorVid);
-          tarjetaVideo.style.display = 'block';
+        if (!datos || datos.length === 0) {
+          document.getElementById('tarjeta-video-principal').style.display = 'none';
+          return;
         }
 
-        // 2. CARGAR JUEGO DEL DÍA
-        const juego = datos.find(r => r.tipo === 'juego_del_dia');
-        if (juego) {
-          const tarjetaJuego = document.getElementById('tarjeta-juego-principal');
-          const tituloJuego = document.getElementById('titulo-juego-principal');
-          const descJuego = document.getElementById('desc-juego-principal');
-          const visorJuego = document.getElementById('visor-juego-principal');
-
-          if (juego.titulo) tituloJuego.textContent = juego.titulo;
-          if (juego.descripcion) descJuego.textContent = juego.descripcion;
-          mostrarEnContenedor(juego.url, visorJuego);
-          tarjetaJuego.style.display = 'block';
+        const video = datos[0];
+        if (video.titulo) {
+          tituloElem.textContent = video.titulo;
+          tituloElem.style.display = 'block';
         }
+        if (video.descripcion) {
+          descElem.textContent = video.descripcion;
+          descElem.style.display = 'block';
+        }
+        mostrarEnContenedor(video.url, visor);
 
       } catch (e) {
-        console.error("Error al cargar desde Supabase", e);
+        document.getElementById('tarjeta-video-principal').style.display = 'none';
       }
     }
 
-    cargarRecursosSupabase();
+    cargarVideoPrincipalSupabase();
   </script>
 </body>
 </html>
