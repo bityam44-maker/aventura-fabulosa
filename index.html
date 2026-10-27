@@ -228,7 +228,7 @@
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
-      <!-- RECUADRO 2: Juego del Día (Debajo del Video del Día) -->
+      <!-- RECUADRO 2: Juego del Día -->
       <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
         <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
         <p id="desc-juego-principal"></p>
@@ -244,4 +244,138 @@
         <div class="cuadricula">
           <article class="tarjeta"><h3>📖 Leer</h3><p>Cuentos, letras y palabras para mejorar la lectura.</p></article>
           <article class="tarjeta"><h3>🎲 Jugar</h3><p>Retos, memoria y juegos de lógica para divertirse.</p></article>
-          <article class="tarjeta"><h3>🔍 Descub
+          <article class="tarjeta"><h3>🔍 Descubrir</h3><p>Animales, países, ciencias y mucho más por explorar.</p></article>
+          <article class="tarjeta"><h3>🎨 Crear</h3><p>Dibuja, colorea e inventa tus propias ideas.</p></article>
+          <article class="tarjeta"><h3>🌙 Soñar</h3><p>Historias e imaginación para viajar sin límites.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECUADRO 3: Plataforma / Zona de Minijuegos -->
+    <section class="juego" id="juegos">
+      <div class="contenedor">
+        <h2 class="titulo-seccion">¡Zona de minijuegos!</h2>
+        <div class="pestanas">
+          <button class="pestana activa" data-juego="j1" type="button">📖 Leer</button>
+          <button class="pestana" data-juego="j2" type="button">🎲 Jugar</button>
+          <button class="pestana" data-juego="j3" type="button">🔍 Descubrir</button>
+          <button class="pestana" data-juego="j4" type="button">🎨 Crear</button>
+          <button class="pestana" data-juego="j5" type="button">🌙 Soñar</button>
+        </div>
+        <div class="panel marco" id="j1"><iframe title="Leer" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div>
+        <div class="panel marco" id="j2" hidden><iframe title="Jugar" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div>
+        <div class="panel marco" id="j3" hidden><iframe title="Descubrir" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div>
+        <div class="panel marco" id="j4" hidden><iframe title="Crear" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div>
+        <div class="panel marco" id="j5" hidden><iframe title="Soñar" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div>
+      </div>
+    </section>
+
+    <section class="contacto" id="contacto">
+      <div class="contenedor">
+        <h2 class="titulo-seccion">Contacto</h2>
+        <p>¿Tienes ideas o preguntas? Escríbenos a <a href="mailto:ileanarios5pr@gmail.com">ileanarios5pr@gmail.com</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
+  </footer>
+
+  <script>
+    document.getElementById("anio").textContent = new Date().getFullYear(); 
+
+    document.querySelectorAll(".pestana").forEach(p => { 
+      p.addEventListener("click", () => { 
+        document.querySelectorAll(".pestana").forEach(x => x.classList.remove("activa")); 
+        document.querySelectorAll(".panel").forEach(x => x.hidden = true); 
+        p.classList.add("activa"); 
+        document.getElementById(p.dataset.juego).hidden = false; 
+      }); 
+    }); 
+
+    function procesarEnlaceVideo(url) { 
+      if (!url) return null; 
+      let yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/); 
+      if (yt) return { tipo: "iframe", src: "https://www.youtube.com/embed/" + yt[1] + "?enablejsapi=1&rel=0" }; 
+      let drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/drive\.google\.com\/open\?id=([\w-]+)/); 
+      if (drive) return { tipo: "iframe", src: "https://drive.google.com/file/d/" + drive[1] + "/preview" }; 
+      return { tipo: "directo", src: url }; 
+    } 
+
+    function mostrarEnContenedor(url, contenedor) { 
+      const info = procesarEnlaceVideo(url); 
+      if (!info) return; 
+      contenedor.innerHTML = ""; 
+      if (info.tipo === "directo") { 
+        contenedor.innerHTML = '<video src="' + info.src + '" controls playsinline style="width:100%;height:100%;"></video>'; 
+      } else { 
+        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Recurso" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
+      } 
+    } 
+
+    async function cargarRecursosSupabase() {
+      const URL_SUPABASE = 'https://onnzstykkintecvfkauz.supabase.co'; 
+      const API_KEY_SUPABASE = 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH'; 
+
+      try {
+        // Traemos todos los recursos publicados ordenados del más nuevo al más viejo
+        const respuesta = await fetch(URL_SUPABASE + '/rest/v1/recursos?publicado=eq.true&select=tipo,titulo,descripcion,url&order=creado_en.desc', {
+          headers: { 'apikey': API_KEY_SUPABASE }
+        });
+
+        if (!respuesta.ok) return;
+        const datos = await respuesta.json();
+        if (!datos || datos.length === 0) return;
+
+        // Separamos automáticamente los que encuentren por tipo o tomamos los primeros disponibles
+        const video = datos.find(r => r.tipo === 'video' || r.tipo === 'Video') || datos[0];
+        const juego = datos.find(r => r.tipo === 'juego_del_dia' || r.tipo === 'juego_dia' || r.tipo === 'juego') || (datos.length > 1 ? datos[1] : null);
+
+        // 1. Mostrar Recuadro de Video
+        if (video) {
+          const tarjetaVideo = document.getElementById('tarjeta-video-principal');
+          const tituloVid = document.getElementById('titulo-video-principal');
+          const descVid = document.getElementById('desc-video-principal');
+          const visorVid = document.getElementById('visor-video-principal');
+
+          if (video.titulo) {
+            tituloVid.textContent = video.titulo;
+            tituloVid.style.display = 'block';
+          }
+          if (video.descripcion) {
+            descVid.textContent = video.descripcion;
+            descVid.style.display = 'block';
+          }
+          mostrarEnContenedor(video.url, visorVid);
+          tarjetaVideo.style.display = 'block';
+        }
+
+        // 2. Mostrar Recuadro de Juego del Día
+        if (juego && juego !== video) {
+          const tarjetaJuego = document.getElementById('tarjeta-juego-principal');
+          const tituloJuego = document.getElementById('titulo-juego-principal');
+          const descJuego = document.getElementById('desc-juego-principal');
+          const visorJuego = document.getElementById('visor-juego-principal');
+
+          if (juego.titulo) {
+            tituloJuego.textContent = juego.titulo;
+            tituloJuego.style.display = 'block';
+          }
+          if (juego.descripcion) {
+            descJuego.textContent = juego.descripcion;
+            descJuego.style.display = 'block';
+          }
+          mostrarEnContenedor(juego.url, visorJuego);
+          tarjetaJuego.style.display = 'block';
+        }
+
+      } catch (e) {
+        console.error("Error al cargar desde Supabase", e);
+      }
+    }
+
+    cargarRecursosSupabase();
+  </script>
+</body>
+</html>
