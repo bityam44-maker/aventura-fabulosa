@@ -34,6 +34,10 @@
     .seccion-tarjeta { background: var(--blanco); color: var(--texto); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 6px 12px rgba(0,0,0,0.1); text-align: center; }
     .seccion-tarjeta h2 { color: var(--azul); font-size: 2rem; margin-bottom: 1.5rem; }
 
+    .grid-categorias { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .cat-item { background: var(--azul-claro); border: 2px solid var(--azul); border-radius: 15px; padding: 1rem; text-align: center; font-weight: bold; color: var(--texto); }
+    .cat-item span { display: block; font-size: 2rem; margin-bottom: 0.5rem; }
+
     .tarjetas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; text-align: left; }
     .tarjeta { background: var(--blanco); border: 3px solid var(--amarillo); border-radius: 15px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
     .tarjeta h3 { color: var(--azul); margin-bottom: 0.5rem; font-size: 1.3rem; }
@@ -52,49 +56,56 @@
 <body>
 
   <header>
-    <h1><span style="font-size: 2rem;">🦸‍♂️</span> Aventura Fabulosa</h1>
+    <h1>🦸‍♂️ Aventura Fabulosa</h1>
     <nav>
-      <a href="index.html">Inicio</a>
+      <a href="#inicio">Inicio</a>
       <a href="#recursos">Recursos</a>
       <a href="#juegos">Juegos</a>
       <a href="#videos">Videos</a>
       <a href="#contacto">Contacto</a>
-      <a href="admin.html" style="background: var(--amarillo); color: var(--texto); padding: 0.4rem 0.8rem; border-radius: 12px;">Admin</a>
     </nav>
   </header>
 
-  <!-- Banner del Superhéroe idéntico a tu captura -->
+  <!-- Banner del Superhéroe -->
   <div class="hero-banner">
-    <img src="https://bityam44-maker.github.io/aventura-fabulosa/banner.png" alt="Aprender también es una aventura" onerror="this.src='https://raw.githubusercontent.com/bityam44-maker/aventura-fabulosa/main/banner.png'">
+    <img src="banner.png" alt="Aprender también es una aventura" onerror="this.src='https://raw.githubusercontent.com/bityam44-maker/aventura-fabulosa/main/banner.png'">
   </div>
 
   <div class="hero-text" id="inicio">
     <h2>¡Aprender también es una aventura!</h2>
     <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p>
-    <a href="#videos" class="boton">¡Quiero ver los videos!</a>
+    <a href="#juegos" class="boton">¡Quiero jugar!</a>
   </div>
 
   <main>
-    <section class="seccion-tarjeta" id="videos">
-      <h2>🎬 Videos Explicativos y Películas</h2>
-      <div id="av-lista-informativos" class="tarjetas-grid">
-        <p>Cargando videos...</p>
-      </div>
-    </section>
-
+    <!-- Categorías -->
     <section class="seccion-tarjeta" id="recursos">
-      <h2>🌟 Todos los Recursos</h2>
-      <div id="av-lista-recursos" class="tarjetas-grid">
-        <p>Cargando recursos...</p>
+      <h2>Leer, jugar, descubrir, crear y soñar</h2>
+      <div class="grid-categorias">
+        <div class="cat-item"><span>📖</span> Leer<br><small>Cuentos y letras</small></div>
+        <div class="cat-item"><span>🎲</span> Jugar<br><small>Retos y memoria</small></div>
+        <div class="cat-item"><span>🔍</span> Descubrir<br><small>Ciencia y naturaleza</small></div>
+        <div class="cat-item"><span>🎨</span> Crear<br><small>Dibuja e inventa</small></div>
+        <div class="cat-item"><span>🌙</span> Soñar<br><small>Historias sin límites</small></div>
       </div>
     </section>
 
+    <!-- Videos / Películas del día -->
+    <section class="seccion-tarjeta" id="videos">
+      <h2>🎬 Videos explicativos</h2>
+      <div id="av-lista-informativos" class="tarjetas-grid">
+        <p>Cargando video informativo...</p>
+      </div>
+    </section>
+
+    <!-- Zona de Minijuegos y Educaplay -->
     <section class="seccion-tarjeta" id="juegos">
       <h2>🎮 ¡Más actividades te esperan!</h2>
       <p style="margin-bottom: 1.5rem; color: #444;">Practica con juegos, crucigramas, sopas de letras y retos de todo tipo en nuestra colección de Educaplay.</p>
-      <a href="https://www.educaplay.com/" target="_blank" class="boton">Ir a las actividades</a>
+      <a href="https://www.educaplay.com/" target="_blank" class="boton">Ir al juego</a>
     </section>
 
+    <!-- Contacto -->
     <section class="seccion-tarjeta" id="contacto">
       <h2>Contacto</h2>
       <p style="color: #444;">¿Tienes ideas o preguntas? Escríbenos a <a href="mailto:tucorreo@ejemplo.com" style="color: var(--azul); font-weight: bold;">tucorreo@ejemplo.com</a></p>
@@ -130,22 +141,19 @@
     }
 
     async function avCargarRecursos() {
-      const zona = document.getElementById('av-lista-recursos');
       const informativos = document.getElementById('av-lista-informativos');
-      if (!zona) return;
+      if (!informativos) return;
       
       const r = await avSb.from('recursos').select('*').eq('publicado', true).order('creado_en', { ascending: false });
       if (r.error) {
-        zona.innerHTML = '<p>Error al cargar el contenido.</p>';
+        informativos.innerHTML = '<p>Error al cargar el contenido.</p>';
         return;
       }
       
-      if (informativos) informativos.innerHTML = '';
-      zona.innerHTML = '';
+      informativos.innerHTML = '';
       
       if (!r.data || r.data.length === 0) {
-        zona.innerHTML = '<p>No hay contenido disponible por el momento.</p>';
-        if (informativos) informativos.innerHTML = '<p>No hay videos informativos hoy.</p>';
+        informativos.innerHTML = '<p>No hay contenido disponible por el momento.</p>';
         return;
       }
 
@@ -153,23 +161,3 @@
         const art = document.createElement('article');
         art.className = 'tarjeta';
         const emb = avYoutubeEmbed(x.url);
-        
-        art.innerHTML = '<h3>' + x.titulo + '</h3>' +
-          '<p>' + ((x.descripcion || '').replace(/[<>]/g, '')) + '</p>' + 
-          (emb ? 
-            '<div class="video-yt"><iframe src="' + emb + '" title="' + x.titulo.replace(/"/g, '') + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>' : 
-            (x.url ? '<a class="boton" href="' + x.url + '" target="_blank" rel="noopener">Abrir recurso</a>' : '')
-          );
-        
-        if (x.categoria === 'Videos informativos' && informativos) {
-          informativos.appendChild(art);
-        } else {
-          zona.appendChild(art);
-        }
-      });
-    }
-
-    avCargarRecursos();
-  </script>
-</body>
-</html>
