@@ -287,7 +287,7 @@
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
-      <!-- RECUADRO 2: Juego del Día (Con botón para abrir ventana flotante) -->
+      <!-- RECUADRO 2: Juego del Día -->
       <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
         <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
         <p id="desc-juego-principal"></p>
@@ -353,7 +353,7 @@
   </main>
 
   <footer>
-    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por la Licenciada Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
+    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por la Licda. Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
   </footer>
 
   <script>
@@ -444,7 +444,6 @@
             descJuego.style.display = 'block';
           }
 
-          // Al hacer clic en el botón, abre el modal cargando la URL exacta de Educaplay en un iframe flotante
           btnAbrir.addEventListener("click", () => {
             if (juego.url) {
               iframeModal.src = juego.url;
@@ -452,13 +451,11 @@
             modalJuego.hidden = false;
           });
 
-          // Cerrar ventana flotante
           btnCerrar.addEventListener("click", () => {
             modalJuego.hidden = true;
-            iframeModal.src = ""; // Detiene el juego al cerrar
+            iframeModal.src = "";
           });
 
-          // Cerrar haciendo clic fuera de la ventana
           modalJuego.addEventListener("click", (e) => {
             if (e.target === modalJuego) {
               modalJuego.hidden = true;
