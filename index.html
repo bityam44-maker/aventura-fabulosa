@@ -228,13 +228,11 @@
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
-      <!-- RECUADRO 2: Juego del Día (Con botón interactivo directo) -->
+      <!-- RECUADRO 2: Juego del Día (Vuelve a mostrarse como visor integrado) -->
       <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
         <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
         <p id="desc-juego-principal"></p>
-        <div style="padding: 1rem 0; text-align: center;">
-          <a id="enlace-juego-principal" class="boton verde" href="#" target="_blank" rel="noopener">🎮 ¡Jugar Ahora!</a>
-        </div>
+        <div class="contenedor-video-unico" id="visor-juego-principal"></div>
       </article>
 
       <a class="boton" href="#juegos">¡Quiero jugar!</a>
@@ -302,7 +300,16 @@
       if (yt) return { tipo: "iframe", src: "https://www.youtube.com/embed/" + yt[1] + "?enablejsapi=1&rel=0" }; 
       let drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/drive\.google\.com\/open\?id=([\w-]+)/); 
       if (drive) return { tipo: "iframe", src: "https://drive.google.com/file/d/" + drive[1] + "/preview" }; 
-      return { tipo: "directo", src: url }; 
+      
+      // Adaptación automática para juegos de Educaplay en modo embebido dentro de la página
+      if (url.includes("educaplay.com/recursos-educativos/") || url.includes("educaplay.com/juego/")) {
+        let idJuego = url.match(/(\d+-[a-zA-Z0-9-]+)/);
+        if (idJuego) {
+          return { tipo: "iframe", src: "https://es.educaplay.com/juego/" + idJuego[1] };
+        }
+      }
+
+      return { tipo: "iframe", src: url }; 
     } 
 
     function mostrarEnContenedor(url, contenedor) { 
@@ -351,12 +358,12 @@
           tarjetaVideo.style.display = 'block';
         }
 
-        // 2. Mostrar Recuadro de Juego del Día con su Botón de Acceso
+        // 2. Mostrar Recuadro de Juego del Día Integrado
         if (juego && juego !== video) {
           const tarjetaJuego = document.getElementById('tarjeta-juego-principal');
           const tituloJuego = document.getElementById('titulo-juego-principal');
           const descJuego = document.getElementById('desc-juego-principal');
-          const btnJuego = document.getElementById('enlace-juego-principal');
+          const visorJuego = document.getElementById('visor-juego-principal');
 
           if (juego.titulo) {
             tituloJuego.textContent = juego.titulo;
@@ -366,9 +373,7 @@
             descJuego.textContent = juego.descripcion;
             descJuego.style.display = 'block';
           }
-          if (juego.url) {
-            btnJuego.href = juego.url;
-          }
+          mostrarEnContenedor(juego.url, visorJuego);
           tarjetaJuego.style.display = 'block';
         }
 
