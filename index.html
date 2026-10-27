@@ -89,7 +89,6 @@
       box-shadow:0 8px 0 rgba(0,0,0,.18); 
     } 
 
-    /* REPRODUCTOR DESTACADO EN LA PORTADA */
     .tarjeta-video-principal { 
       background: var(--blanco); 
       border-radius: 24px; 
@@ -169,15 +168,18 @@
     .pestana.activa { background:var(--azul); color:var(--blanco); } 
     .panel[hidden] { display:none; } 
     
-    .marco { 
+    /* ESTILO PARA LOS PANELES DE MINIJUEGOS (CONTENIDO LIMPIO Y SEGURO) */
+    .marco-juego { 
       max-width:900px; 
       margin:0 auto; 
       border:5px solid var(--azul); 
       border-radius:24px; 
-      overflow:hidden; 
+      padding:3rem 2rem; 
       background:var(--azul-claro); 
+      text-align:center; 
     } 
-    .marco iframe { width:100%; height:520px; border:0; display:block; } 
+    .marco-juego h3 { color:var(--azul); font-size:1.8rem; margin-bottom:1rem; } 
+    .marco-juego p { margin-bottom:1.5rem; font-size:1.15rem; } 
 
     .actividades { 
       background:var(--verde); 
@@ -203,7 +205,6 @@
     } 
     @media (max-width:600px){ 
       .barra{justify-content:center;} 
-      .marco iframe{height:440px;} 
     } 
   </style>
 </head>
@@ -232,7 +233,7 @@
       <h2>¡Aprender también es una aventura!</h2> 
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p> 
       
-      <!-- REPRODUCTOR ÚNICO PRINCIPAL (SIN MENSAJES DE CARGA ANTESTÉTICOS) -->
+      <!-- REPRODUCTOR ÚNICO PRINCIPAL -->
       <article class="tarjeta-video-principal" id="tarjeta-video-principal">
         <h3 id="titulo-video-principal" style="display:none;"></h3>
         <p id="desc-video-principal" style="display:none;"></p>
@@ -255,7 +256,7 @@
       </div> 
     </section> 
 
-    <!-- SECCIÓN DE MINIJUEGOS CON CONTENIDO DIFERENTE POR PESTAÑA -->
+    <!-- ZONA DE MINIJUEGOS REPARADA Y ORGANIZADA -->
     <section class="juego" id="juegos"> 
       <div class="contenedor"> 
         <h2 class="titulo-seccion">¡Zona de minijuegos!</h2> 
@@ -266,11 +267,36 @@
           <button class="pestana" data-juego="j4" type="button">🎨 Crear</button> 
           <button class="pestana" data-juego="j5" type="button">🌙 Soñar</button> 
         </div> 
-        <div class="panel marco" id="j1"><iframe title="Sopa de Letras - Leer" src="https://es.educaplay.com/recursos-educativos/tipo/sopa-de-letras/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j2" hidden><iframe title="Juegos de Memoria" src="https://es.educaplay.com/recursos-educativos/tipo/memoria/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j3" hidden><iframe title="Adivinanzas - Descubrir" src="https://es.educaplay.com/recursos-educativos/tipo/adivinanza/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j4" hidden><iframe title="Crucigramas - Crear" src="https://es.educaplay.com/recursos-educativos/tipo/crucigrama/" loading="lazy" allowfullscreen></iframe></div> 
-        <div class="panel marco" id="j5" hidden><iframe title="Completar Textos - Soñar" src="https://es.educaplay.com/recursos-educativos/tipo/completar/" loading="lazy" allowfullscreen></iframe></div> 
+
+        <div class="panel marco-juego" id="j1">
+          <h3>📖 Actividades de Lectura</h3>
+          <p>Mejora tu vocabulario y comprensión con sopas de letras y lecturas divertidas.</p>
+          <a class="boton" href="https://es.educaplay.com/recursos-educativos/tipo/sopa-de-letras/" target="_blank" rel="noopener">Abrir juegos de Leer</a>
+        </div> 
+
+        <div class="panel marco-juego" id="j2" hidden>
+          <h3>🎲 Juegos de Lógica y Memoria</h3>
+          <p>Pon a prueba tu agilidad mental con retos de memoria y rompecabezas.</p>
+          <a class="boton" href="https://es.educaplay.com/recursos-educativos/tipo/memoria/" target="_blank" rel="noopener">Abrir juegos de Jugar</a>
+        </div> 
+
+        <div class="panel marco-juego" id="j3" hidden>
+          <h3>🔍 Descubre el Mundo</h3>
+          <p>Explora la ciencia, adivinanzas y datos curiosos sobre nuestro planeta.</p>
+          <a class="boton" href="https://es.educaplay.com/recursos-educativos/tipo/adivinanza/" target="_blank" rel="noopener">Abrir juegos de Descubrir</a>
+        </div> 
+
+        <div class="panel marco-juego" id="j4" hidden>
+          <h3>🎨 Espacio de Creación</h3>
+          <p>Diviértete resolviendo crucigramas y creando nuevas ideas.</p>
+          <a class="boton" href="https://es.educaplay.com/recursos-educativos/tipo/crucigrama/" target="_blank" rel="noopener">Abrir juegos de Crear</a>
+        </div> 
+
+        <div class="panel marco-juego" id="j5" hidden>
+          <h3>🌙 Historias y Soñar</h3>
+          <p>Completa textos y viaja a través de la imaginación y los cuentos.</p>
+          <a class="boton" href="https://es.educaplay.com/recursos-educativos/tipo/completar/" target="_blank" rel="noopener">Abrir juegos de Soñar</a>
+        </div> 
       </div> 
     </section> 
 
@@ -298,7 +324,6 @@
   <script> 
     document.getElementById("anio").textContent = new Date().getFullYear(); 
     
-    // Cambiar pestañas
     document.querySelectorAll(".pestana").forEach(p => { 
       p.addEventListener("click", () => { 
         document.querySelectorAll(".pestana").forEach(x => x.classList.remove("activa")); 
@@ -311,7 +336,7 @@
     function procesarEnlaceVideo(url) { 
       if (!url) return null; 
       let yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/); 
-      if (yt) return { tipo: "iframe", src: "https://www.youtube.com/embed/" + yt[1] }; 
+      if (yt) return { tipo: "iframe", src: "https://www.youtube.com/embed/" + yt[1] + "?enablejsapi=1&rel=0" }; 
       let drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/drive\.google\.com\/open\?id=([\w-]+)/); 
       if (drive) return { tipo: "iframe", src: "https://drive.google.com/file/d/" + drive[1] + "/preview" }; 
       return { tipo: "directo", src: url }; 
