@@ -1,4 +1,4 @@
-<script>
+<script> 
   document.getElementById("anio").textContent = new Date().getFullYear(); 
   document.querySelectorAll(".pestana").forEach(p => { 
     p.addEventListener("click", () => { 
@@ -68,9 +68,8 @@
   }
 
   pintarVideos(); 
-</script> 
+</script>
 
-<!-- Supabase Client & Conexión -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const AV_SUPABASE_URL = 'https://onnzstykkintecvfkauz.supabase.co';
@@ -94,29 +93,25 @@ async function avCargarPublicados() {
   const informativos = document.getElementById('videos-informativos');
   if (!zona) return;
   
-  try {
-    const r = await AV_DB.from('recursos').select('id,tipo,categoria,titulo,descripcion,url,imagen_url').eq('publicado', true).order('creado_en', { ascending: false });
-    if (r.error || !r.data || !r.data.length) return;
+  const r = await AV_DB.from('recursos').select('id,tipo,categoria,titulo,descripcion,url,imagen_url').eq('publicado', true).order('creado_en', { ascending: false });
+  if (r.error || !r.data || !r.data.length) return;
+  
+  r.data.forEach(x => {
+    const art = document.createElement('article');
+    art.className = 'tarjeta';
+    const emb = (x.tipo === 'video') ? avUniversalEmbed(x.url) : null;
     
-    r.data.forEach(x => {
-      const art = document.createElement('article');
-      art.className = 'tarjeta';
-      const emb = (x.tipo === 'video') ? avUniversalEmbed(x.url) : null;
-      
-      art.innerHTML = '<h3>' + x.titulo + '</h3>' + 
-        '<p>' + ((x.descripcion || '').replace(/[<>]/g, '')) + '</p>' + 
-        (emb ? '<div class="video-yt"><iframe src="' + emb + '" title="' + x.titulo.replace(/"/g, '') + '" allow="autoplay; encrypted-media" loading="lazy" allowfullscreen></iframe></div>' : 
-        (x.url ? '<a class="boton" href="' + x.url + '" target="_blank" rel="noopener">Abrir recurso</a>' : ''));
-      
-      if (x.categoria === 'Videos informativos' && informativos) {
-        informativos.prepend(art);
-      } else {
-        zona.prepend(art);
-      }
-    });
-  } catch (err) {
-    console.error("Error al cargar:", err);
-  }
+    art.innerHTML = '<h3>' + x.titulo + '</h3>' + 
+      '<p>' + ((x.descripcion || '').replace(/[<>]/g, '')) + '</p>' + 
+      (emb ? '<div class="video-yt"><iframe src="' + emb + '" title="' + x.titulo.replace(/"/g, '') + '" allow="autoplay; encrypted-media" loading="lazy" allowfullscreen></iframe></div>' : 
+      (x.url ? '<a class="boton" href="' + x.url + '" target="_blank" rel="noopener">Abrir recurso</a>' : ''));
+    
+    if (x.categoria === 'Videos informativos' && informativos) {
+      informativos.prepend(art);
+    } else {
+      zona.prepend(art);
+    }
+  });
 }
 
 avCargarPublicados();
