@@ -228,7 +228,7 @@
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
-      <!-- RECUADRO 2: Juego del Día (Vuelve a mostrarse como visor integrado) -->
+      <!-- RECUADRO 2: Juego del Día -->
       <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
         <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
         <p id="desc-juego-principal"></p>
@@ -301,11 +301,11 @@
       let drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/drive\.google\.com\/open\?id=([\w-]+)/); 
       if (drive) return { tipo: "iframe", src: "https://drive.google.com/file/d/" + drive[1] + "/preview" }; 
       
-      // Adaptación automática para juegos de Educaplay en modo embebido dentro de la página
-      if (url.includes("educaplay.com/recursos-educativos/") || url.includes("educaplay.com/juego/")) {
+      // Conversión exacta para incrustar el juego individual de Educaplay sin plataforma general
+      if (url.includes("educaplay.com")) {
         let idJuego = url.match(/(\d+-[a-zA-Z0-9-]+)/);
         if (idJuego) {
-          return { tipo: "iframe", src: "https://es.educaplay.com/juego/" + idJuego[1] };
+          return { tipo: "iframe", src: "https://es.educaplay.com/embed/" + idJuego[1] + "/" };
         }
       }
 
@@ -358,7 +358,7 @@
           tarjetaVideo.style.display = 'block';
         }
 
-        // 2. Mostrar Recuadro de Juego del Día Integrado
+        // 2. Mostrar Recuadro de Juego del Día con el juego exacto embebido
         if (juego && juego !== video) {
           const tarjetaJuego = document.getElementById('tarjeta-juego-principal');
           const tituloJuego = document.getElementById('titulo-juego-principal');
