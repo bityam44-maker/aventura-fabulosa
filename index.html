@@ -89,7 +89,7 @@
       box-shadow: 0 8px 0 rgba(0,0,0,.18); 
     }
 
-    .tarjeta-video-principal { 
+    .tarjeta-destacada { 
       background: var(--blanco); 
       border-radius: 24px; 
       padding: 1.5rem; 
@@ -100,9 +100,9 @@
       text-align: center; 
       color: var(--texto);
     } 
-    .tarjeta-video-principal h3 { color: var(--azul); font-size: 1.8rem; margin-bottom: .4rem; } 
-    .tarjeta-video-principal p { font-size: 1.1rem; color: #555; margin-bottom: .8rem; } 
-    .contenedor-video-unico { 
+    .tarjeta-destacada h3 { color: var(--azul); font-size: 1.8rem; margin-bottom: .4rem; } 
+    .tarjeta-destacada p { font-size: 1.1rem; color: #555; margin-bottom: .8rem; } 
+    .contenedor-iframe { 
       position: relative; 
       aspect-ratio: 16/9; 
       width: 100%; 
@@ -111,7 +111,7 @@
       background: #000; 
       margin-top: .8rem; 
     } 
-    .contenedor-video-unico iframe, .contenedor-video-unico video { 
+    .contenedor-iframe iframe, .contenedor-iframe video { 
       width: 100%; 
       height: 100%; 
       border: 0; 
@@ -133,7 +133,6 @@
       font-family: inherit; 
     }
     .boton:hover { transform: translateY(-3px); }
-    .boton.verde { background: var(--verde); box-shadow: 0 5px 0 #26a15c; color: var(--blanco); }
 
     .cuadricula { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
     .tarjeta { 
@@ -220,12 +219,8 @@
       <h2>¡Aprender también es una aventura!</h2>
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p>
       
-      <!-- Sección para mostrar el Video o el Juego del Día -->
-      <article class="tarjeta-video-principal" id="tarjeta-video-principal">
-        <h3 id="titulo-video-principal" style="display:none;"></h3>
-        <p id="desc-video-principal" style="display:none;"></p>
-        <div class="contenedor-video-unico" id="visor-video-principal"></div>
-      </article>
+      <!-- Área donde se cargarán automáticamente los videos y juegos del día -->
+      <div id="seccion-recursos-principales"></div>
 
       <a class="boton" href="#juegos">¡Quiero jugar!</a>
     </section>
@@ -286,77 +281,30 @@
       }); 
     }); 
 
-    function procesarEnlaceVideo(url) { 
+    function obtenerEmbedURL(url) { 
       if (!url) return null; 
       let yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/); 
-      if (yt) return { tipo: "iframe", src: "https://www.youtube.com/embed/" + yt[1] + "?enablejsapi=1&rel=0" }; 
+      if (yt) return "https://www.youtube.com/embed/" + yt[1] + "?enablejsapi=1&rel=0"; 
       let drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/drive\.google\.com\/open\?id=([\w-]+)/); 
-      if (drive) return { tipo: "iframe", src: "https://drive.google.com/file/d/" + drive[1] + "/preview" }; 
-      return { tipo: "directo", src: url }; 
+      if (drive) return "https://drive.google.com/file/d/" + drive[1] + "/preview"; 
+      return url; 
     } 
 
-    function mostrarEnContenedor(url, contenedor) { 
-      const info = procesarEnlaceVideo(url); 
-      if (!info) return; 
-      contenedor.innerHTML = ""; 
-      if (info.tipo === "directo") { 
-        contenedor.innerHTML = '<video src="' + info.src + '" controls playsinline style="width:100%;height:100%;"></video>'; 
-      } else { 
-        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Recurso Principal" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
-      } 
-    } 
-
-    async function cargarRecursoPrincipalSupabase() {
-      const visor = document.getElementById('visor-video-principal'); 
-      const tituloElem = document.getElementById('titulo-video-principal');
-      const descElem = document.getElementById('desc-video-principal');
-      const tarjeta = document.getElementById('tarjeta-video-principal');
+    async function cargarRecursosDesdeSupabase() {
+      const contenedorPadre = document.getElementById('seccion-recursos-principales');
+      contenedorPadre.innerHTML = '';
 
       try {
-        // Buscamos primero si hay un "juego_del_dia" publicado
-        let urlAPI = 'https://onnzstykkintecvfkauz.supabase.co/rest/v1/recursos?publicado=eq.true&tipo=eq.juego_del_dia&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
-        let respuesta = await fetch(urlAPI, {
+        const urlAPI = 'https://onnzstykkintecvfkauz.supabase.co/rest/v1/recursos?publicado=eq.true&select=id,tipo,titulo,descripcion,url&order=creado_en.desc';
+        const respuesta = await fetch(urlAPI, {
           headers: { 'apikey': 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH' }
         });
-        let datos = await respuesta.json();
 
-        // Si no hay juego del dia, buscamos un video publicado
-        if (!datos || datos.length === 0) {
-          urlAPI = 'https://onnzstykkintecvfkauz.supabase.co/rest/v1/recursos?publicado=eq.true&tipo=eq.video&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
-          respuesta = await fetch(urlAPI, {
-            headers: { 'apikey': 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH' }
-          });
-          datos = await respuesta.json();
-        }
+        if (!respuesta.ok) return;
+        const datos = await respuesta.json();
 
-        if (!datos || datos.length === 0) {
-          tarjeta.style.display = 'none';
-          return;
-        }
+        if (!datos || datos.length === 0) return;
 
-        const recurso = datos[0];
-        tarjeta.style.display = 'block';
-
-        if (recurso.titulo) {
-          tituloElem.textContent = recurso.titulo;
-          tituloElem.style.display = 'block';
-        }
-        if (recurso.descripcion) {
-          descElem.textContent = recurso.descripcion;
-          descElem.style.display = 'block';
-        }
-        if (recurso.url) {
-          mostrarEnContenedor(recurso.url, visor);
-        } else {
-          visor.style.display = 'none';
-        }
-
-      } hechiceria_error => {
-        tarjeta.style.display = 'none';
-      }
-    }
-
-    cargarRecursoPrincipalSupabase();
-  </script>
-</body>
-</html>
+        // Buscamos el último video y el último juego_del_dia
+        const ultimoJuegoDia = datos.find(r => r.tipo === 'juego_del_dia');
+        const ultimoVideo
