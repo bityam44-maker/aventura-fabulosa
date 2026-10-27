@@ -220,6 +220,7 @@
       <h2>¡Aprender también es una aventura!</h2>
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p>
       
+      <!-- Sección para mostrar el Video o el Juego del Día -->
       <article class="tarjeta-video-principal" id="tarjeta-video-principal">
         <h3 id="titulo-video-principal" style="display:none;"></h3>
         <p id="desc-video-principal" style="display:none;"></p>
@@ -247,7 +248,7 @@
         <h2 class="titulo-seccion">¡Zona de minijuegos!</h2>
         <div class="pestanas">
           <button class="pestana activa" data-juego="j1" type="button">📖 Leer</button>
-          <button class="pestana" data-j="j2" type="button">🎲 Jugar</button>
+          <button class="pestana" data-juego="j2" type="button">🎲 Jugar</button>
           <button class="pestana" data-juego="j3" type="button">🔍 Descubrir</button>
           <button class="pestana" data-juego="j4" type="button">🎨 Crear</button>
           <button class="pestana" data-juego="j5" type="button">🌙 Soñar</button>
@@ -269,7 +270,8 @@
   </main>
 
   <footer>
-    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por Lcda. Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
+    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por Lcda. Ileana Ríos.</p>
+    <p><a href="https://es.educaplay.com/" target="_blank" rel="noopener">Educaplay</a> <a href="https://es.khanacademy.org/" target="_blank" rel="noopener">Khan Academy</a> <a href="#inicio">Volver arriba</a></p>
   </footer>
 
   <script>
@@ -300,52 +302,61 @@
       if (info.tipo === "directo") { 
         contenedor.innerHTML = '<video src="' + info.src + '" controls playsinline style="width:100%;height:100%;"></video>'; 
       } else { 
-        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Video" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
+        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Recurso Principal" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
       } 
     } 
 
-    async function cargarVideoPrincipalSupabase() {
+    async function cargarRecursoPrincipalSupabase() {
       const visor = document.getElementById('visor-video-principal'); 
       const tituloElem = document.getElementById('titulo-video-principal');
       const descElem = document.getElementById('desc-video-principal');
+      const tarjeta = document.getElementById('tarjeta-video-principal');
 
       try {
-        const URL_SUPABASE = 'AQUÍ_VA_TU_URL_DE_SUPABASE'; 
-        const API_KEY_SUPABASE = 'AQUÍ_VA_TU_API_KEY_DE_SUPABASE'; 
-
-        const urlAPI = URL_SUPABASE + '/rest/v1/recursos?publicado=eq.true&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
-        
-        const respuesta = await fetch(urlAPI, {
-          headers: {
-            'apikey': API_KEY_SUPABASE
-          }
+        // Buscamos primero si hay un "juego_del_dia" publicado
+        let urlAPI = 'https://onnzstykkintecvfkauz.supabase.co/rest/v1/recursos?publicado=eq.true&tipo=eq.juego_del_dia&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
+        let respuesta = await fetch(urlAPI, {
+          headers: { 'apikey': 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH' }
         });
+        let datos = await respuesta.json();
 
-        if (!respuesta.ok) throw new Error('Error al conectar');
-        const datos = await respuesta.json();
+        // Si no hay juego del dia, buscamos un video publicado
+        if (!datos || datos.length === 0) {
+          urlAPI = 'https://onnzstykkintecvfkauz.supabase.co/rest/v1/recursos?publicado=eq.true&tipo=eq.video&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
+          respuesta = await fetch(urlAPI, {
+            headers: { 'apikey': 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH' }
+          });
+          datos = await respuesta.json();
+        }
 
         if (!datos || datos.length === 0) {
-          document.getElementById('tarjeta-video-principal').style.display = 'none';
+          tarjeta.style.display = 'none';
           return;
         }
 
-        const video = datos[0];
-        if (video.titulo) {
-          tituloElem.textContent = video.titulo;
+        const recurso = datos[0];
+        tarjeta.style.display = 'block';
+
+        if (recurso.titulo) {
+          tituloElem.textContent = recurso.titulo;
           tituloElem.style.display = 'block';
         }
-        if (video.descripcion) {
-          descElem.textContent = video.descripcion;
+        if (recurso.descripcion) {
+          descElem.textContent = recurso.descripcion;
           descElem.style.display = 'block';
         }
-        mostrarEnContenedor(video.url, visor);
+        if (recurso.url) {
+          mostrarEnContenedor(recurso.url, visor);
+        } else {
+          visor.style.display = 'none';
+        }
 
-      } catch (e) {
-        document.getElementById('tarjeta-video-principal').style.display = 'none';
+      } hechiceria_error => {
+        tarjeta.style.display = 'none';
       }
     }
 
-    cargarVideoPrincipalSupabase();
+    cargarRecursoPrincipalSupabase();
   </script>
 </body>
 </html>
