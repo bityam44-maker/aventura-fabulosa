@@ -89,33 +89,33 @@
       box-shadow:0 8px 0 rgba(0,0,0,.18); 
     } 
 
-    /* REPRODUCTOR DESTACADO EN LA PORTADA */
-    .reproductor-destacado { 
-      max-width:900px; 
-      margin:0 auto 2rem; 
-      background:var(--blanco); 
-      border-radius:24px; 
-      padding:1.5rem; 
-      border:4px solid var(--amarillo); 
-      box-shadow:0 8px 0 rgba(0,0,0,.08); 
-      text-align:center; 
+    /* ESTILO DE LA TARJETA DEL VIDEO ÚNICO EN LA PORTADA */
+    .tarjeta-video-principal { 
+      background: var(--blanco); 
+      border-radius: 24px; 
+      padding: 1.5rem; 
+      border: 4px solid var(--amarillo); 
+      box-shadow: 0 8px 0 rgba(0,0,0,.08); 
+      max-width: 900px; 
+      margin: 0 auto 2rem; 
+      text-align: center; 
       color: var(--texto);
     } 
-    .reproductor-destacado h3 { color: var(--azul); font-size: 1.8rem; margin-bottom: .4rem; } 
-    .reproductor-destacado p { font-size: 1.1rem; color: #555; margin-bottom: .8rem; } 
-    .contenedor-video-destacado { 
-      position:relative; 
-      aspect-ratio:16/9; 
-      width:100%; 
-      border-radius:16px; 
-      overflow:hidden; 
-      background:#000; 
-      margin-top:.8rem; 
+    .tarjeta-video-principal h3 { color: var(--azul); font-size: 1.8rem; margin-bottom: .4rem; } 
+    .tarjeta-video-principal p { font-size: 1.1rem; color: #555; margin-bottom: .8rem; } 
+    .contenedor-video-unico { 
+      position: relative; 
+      aspect-ratio: 16/9; 
+      width: 100%; 
+      border-radius: 16px; 
+      overflow: hidden; 
+      background: #000; 
+      margin-top: .8rem; 
     } 
-    .contenedor-video-destacado iframe, .contenedor-video-destacado video { 
-      width:100%; 
-      height:100%; 
-      border:0; 
+    .contenedor-video-unico iframe, .contenedor-video-unico video { 
+      width: 100%; 
+      height: 100%; 
+      border: 0; 
     } 
 
     .boton { 
@@ -232,12 +232,12 @@
       <h2>¡Aprender también es una aventura!</h2> 
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p> 
       
-      <!-- REPRODUCTOR ÚNICO PRINCIPAL -->
-      <div class="reproductor-destacado">
-        <h3 id="titulo-destacado">Cargando video principal...</h3>
-        <p id="desc-destacado"></p>
-        <div class="contenedor-video-destacado" id="visor-video-principal"></div>
-      </div>
+      <!-- ÚNICO REPRODUCTOR EN LA PÁGINA PRINCIPAL -->
+      <article class="tarjeta-video-principal">
+        <h3 id="titulo-video-principal">Cargando video principal...</h3>
+        <p id="desc-video-principal"></p>
+        <div class="contenedor-video-unico" id="visor-video-principal"></div>
+      </article>
 
       <a class="boton" href="#juegos">¡Quiero jugar!</a> 
     </section> 
@@ -277,7 +277,7 @@
       <div class="actividades"> 
         <h2>🎮 ¡Más actividades te esperan!</h2> 
         <p>Practica con juegos, crucigramas, sopas de letras y retos de todo tipo en nuestra colección de Educaplay.</p> 
-        <a class="boton" href="https://es.educaplay.com/" target="_blank" rel="noopener">Ir al sitio</a> 
+        <a class="boton" href="https://es.educaplay.com/" target="_blank" rel="noopener">Ir a las actividades</a> 
       </div> 
     </section> 
 
@@ -294,8 +294,11 @@
     <p><a href="https://es.educaplay.com/" target="_blank" rel="noopener">Educaplay</a> <a href="https://es.khanacademy.org/" target="_blank" rel="noopener">Khan Academy</a> <a href="#inicio">Volver arriba</a></p> 
   </footer> 
 
+  <!-- SCRIPTS DE FUNCIONALIDAD -->
   <script> 
     document.getElementById("anio").textContent = new Date().getFullYear(); 
+    
+    // Control de pestañas de juegos
     document.querySelectorAll(".pestana").forEach(p => { 
       p.addEventListener("click", () => { 
         document.querySelectorAll(".pestana").forEach(x => x.classList.remove("activa")); 
@@ -305,6 +308,7 @@
       }); 
     }); 
 
+    // Procesamiento universal de enlaces (YouTube, Drive, MP4)
     function procesarEnlaceVideo(url) { 
       if (!url) return null; 
       let yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/); 
@@ -319,46 +323,4 @@
       if (!info) return; 
       contenedor.innerHTML = ""; 
       if (info.tipo === "directo") { 
-        contenedor.innerHTML = '<video src="' + info.src + '" controls playsinline style="width:100%;height:100%;"></video>'; 
-      } else { 
-        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Video" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
-      } 
-    } 
-
-    async function obtenerVideoDesdeSupabaseDirecto() {
-      const visor = document.getElementById('visor-video-principal'); 
-      const tituloElem = document.getElementById('titulo-destacado');
-      const descElem = document.getElementById('desc-destacado');
-
-      try {
-        const urlAPI = 'https://onnzstykkintecvfkauz.supabase.co/rest/v1/recursos?publicado=eq.true&select=titulo,descripcion,url&order=creado_en.desc&limit=1';
-        const respuesta = await fetch(urlAPI, {
-          headers: {
-            'apikey': 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH'
-          }
-        });
-
-        if (!respuesta.ok) throw new Error('Respuesta no OK');
-        const datos = await respuesta.json();
-
-        if (!datos || datos.length === 0) {
-          tituloElem.textContent = "¡Bienvenido a Aventura Fabulosa!"; 
-          visor.innerHTML = '<p style="color:#fff; padding:3rem; text-align:center;">Pronto publicaremos un nuevo video aquí.</p>'; 
-          return;
-        }
-
-        const video = datos[0];
-        tituloElem.textContent = video.titulo || 'Video Destacado'; 
-        descElem.textContent = video.descripcion || ''; 
-        mostrarEnContenedor(video.url, visor);
-
-      } catch (e) {
-        tituloElem.textContent = "¡Bienvenido a Aventura Fabulosa!"; 
-        visor.innerHTML = '<p style="color:#fff; padding:3rem; text-align:center;">Explora nuestros minijuegos abajo.</p>'; 
-      }
-    }
-
-    obtenerVideoDesdeSupabaseDirecto();
-  </script> 
-</body>
-</html>
+        contenedor.innerHTML = '<video src="' + info.src + '" controls
