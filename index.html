@@ -21,25 +21,29 @@ async function avCargarPublicados() {
   const informativos = document.getElementById('videos-informativos');
   if (!zona) return;
   
-  const r = await AV_DB.from('recursos').select('id,tipo,categoria,titulo,descripcion,url,imagen_url').eq('publicado', true).order('creado_en', { ascending: false });
-  if (r.error || !r.data || !r.data.length) return;
-  
-  r.data.forEach(x => {
-    const art = document.createElement('article');
-    art.className = 'tarjeta';
-    const emb = avUniversalEmbed(x.url);
+  try {
+    const r = await AV_DB.from('recursos').select('id,tipo,categoria,titulo,descripcion,url,imagen_url').eq('publicado', true).order('creado_en', { ascending: false });
+    if (r.error || !r.data || !r.data.length) return;
     
-    art.innerHTML = '<h3>' + x.titulo + '</h3>' + 
-      '<p>' + ((x.descripcion || '').replace(/[<>]/g, '')) + '</p>' + 
-      (emb ? '<div class="video-yt"><iframe src="' + emb + '" title="' + x.titulo.replace(/"/g, '') + '" allow="autoplay; encrypted-media" loading="lazy" allowfullscreen></iframe></div>' : 
-      (x.url ? '<a class="boton" href="' + x.url + '" target="_blank" rel="noopener">Abrir recurso</a>' : ''));
-    
-    if (x.categoria === 'Videos informativos' && informativos) {
-      informativos.prepend(art);
-    } else {
-      zona.prepend(art);
-    }
-  });
+    r.data.forEach(x => {
+      const art = document.createElement('article');
+      art.className = 'tarjeta';
+      const emb = avUniversalEmbed(x.url);
+      
+      art.innerHTML = '<h3>' + x.titulo + '</h3>' + 
+        '<p>' + ((x.descripcion || '').replace(/[<>]/g, '')) + '</p>' + 
+        (emb ? '<div class="video-yt"><iframe src="' + emb + '" title="' + x.titulo.replace(/"/g, '') + '" allow="autoplay; encrypted-media" loading="lazy" allowfullscreen></iframe></div>' : 
+        (x.url ? '<a class="boton" href="' + x.url + '" target="_blank" rel="noopener">Abrir recurso</a>' : ''));
+      
+      if (x.categoria === 'Videos informativos' && informativos) {
+        informativos.prepend(art);
+      } else {
+        zona.prepend(art);
+      }
+    });
+  } catch (err) {
+    console.error("Error al cargar de Supabase:", err);
+  }
 }
 
 avCargarPublicados();
