@@ -228,11 +228,13 @@
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
-      <!-- RECUADRO 2: Juego del Día -->
+      <!-- RECUADRO 2: Juego del Día (Con acceso directo seguro al juego específico) -->
       <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
         <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
         <p id="desc-juego-principal"></p>
-        <div class="contenedor-video-unico" id="visor-juego-principal"></div>
+        <div style="padding: 1.2rem 0; text-align: center;">
+          <a id="enlace-juego-principal" class="boton verde" href="#" target="_blank" rel="noopener">🎮 ¡Jugar el Juego del Día!</a>
+        </div>
       </article>
 
       <a class="boton" href="#juegos">¡Quiero jugar!</a>
@@ -279,7 +281,7 @@
   </main>
 
   <footer>
-    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
+    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios por la Licenciada Ileana Ríos. | <a href="#inicio">Volver arriba</a></p>
   </footer>
 
   <script>
@@ -300,16 +302,7 @@
       if (yt) return { tipo: "iframe", src: "https://www.youtube.com/embed/" + yt[1] + "?enablejsapi=1&rel=0" }; 
       let drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/drive\.google\.com\/open\?id=([\w-]+)/); 
       if (drive) return { tipo: "iframe", src: "https://drive.google.com/file/d/" + drive[1] + "/preview" }; 
-      
-      // Conversión exacta para incrustar el juego individual de Educaplay sin plataforma general
-      if (url.includes("educaplay.com")) {
-        let idJuego = url.match(/(\d+-[a-zA-Z0-9-]+)/);
-        if (idJuego) {
-          return { tipo: "iframe", src: "https://es.educaplay.com/embed/" + idJuego[1] + "/" };
-        }
-      }
-
-      return { tipo: "iframe", src: url }; 
+      return { tipo: "directo", src: url }; 
     } 
 
     function mostrarEnContenedor(url, contenedor) { 
@@ -358,12 +351,12 @@
           tarjetaVideo.style.display = 'block';
         }
 
-        // 2. Mostrar Recuadro de Juego del Día con el juego exacto embebido
+        // 2. Mostrar Recuadro de Juego del Día con su Botón Directo al juego exacto
         if (juego && juego !== video) {
           const tarjetaJuego = document.getElementById('tarjeta-juego-principal');
           const tituloJuego = document.getElementById('titulo-juego-principal');
           const descJuego = document.getElementById('desc-juego-principal');
-          const visorJuego = document.getElementById('visor-juego-principal');
+          const btnJuego = document.getElementById('enlace-juego-principal');
 
           if (juego.titulo) {
             tituloJuego.textContent = juego.titulo;
@@ -373,7 +366,9 @@
             descJuego.textContent = juego.descripcion;
             descJuego.style.display = 'block';
           }
-          mostrarEnContenedor(juego.url, visorJuego);
+          if (juego.url) {
+            btnJuego.href = juego.url;
+          }
           tarjetaJuego.style.display = 'block';
         }
 
