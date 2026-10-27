@@ -1,3 +1,76 @@
+<script>
+  document.getElementById("anio").textContent = new Date().getFullYear(); 
+  document.querySelectorAll(".pestana").forEach(p => { 
+    p.addEventListener("click", () => { 
+      document.querySelectorAll(".pestana").forEach(x => x.classList.remove("activa")); 
+      document.querySelectorAll(".panel").forEach(x => x.hidden = true); 
+      p.classList.add("activa"); 
+      document.getElementById(p.dataset.juego).hidden = false; 
+    }); 
+  }); 
+
+  const listaVideos = document.getElementById("videos-url"); 
+  const msgVideo = document.getElementById("msg-video"); 
+
+  function aEmbed(url) { 
+    let m; 
+    if ((m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/))) 
+      return "https://www.youtube.com/embed/" + m[1] + "?autoplay=1&mute=1"; 
+    if ((m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/)) || (m = url.match(/drive\.google\.com\/open\?id=([\w-]+)/))) 
+      return "https://drive.google.com/file/d/" + m[1] + "/preview"; 
+    return null; 
+  } 
+
+  function guardados() { 
+    try { return JSON.parse(localStorage.getItem("videosUrl") || "[]"); } catch (e) { return []; } 
+  } 
+
+  function pintarVideos() { 
+    if (!listaVideos) return;
+    listaVideos.innerHTML = ""; 
+    guardados().forEach((emb, i) => { 
+      const art = document.createElement("article"); 
+      art.className = "tarjeta"; 
+      art.innerHTML = '<div class="video-yt"><iframe src="' + emb + '" title="Video" allow="autoplay; encrypted-media" loading="lazy" allowfullscreen></iframe></div>'; 
+      const q = document.createElement("button"); 
+      q.type = "button"; 
+      q.className = "quitar"; 
+      q.textContent = "Quitar"; 
+      q.addEventListener("click", () => { 
+        const l = guardados(); 
+        l.splice(i, 1); 
+        localStorage.setItem("videosUrl", JSON.stringify(l)); 
+        pintarVideos(); 
+      }); 
+      art.appendChild(q); 
+      listaVideos.appendChild(art); 
+    }); 
+  } 
+
+  const formVideo = document.getElementById("form-video");
+  if (formVideo) {
+    formVideo.addEventListener("submit", e => { 
+      e.preventDefault(); 
+      const emb = aEmbed(document.getElementById("url-video").value.trim()); 
+      if (!emb) { 
+        msgVideo.textContent = "😕 Ese enlace no parece de YouTube ni de Drive."; 
+        msgVideo.style.color = "#e04848"; 
+        return; 
+      } 
+      const l = guardados(); 
+      l.push(emb); 
+      localStorage.setItem("videosUrl", JSON.stringify(l)); 
+      document.getElementById("url-video").value = ""; 
+      msgVideo.textContent = "✅ ¡Video agregado!"; 
+      msgVideo.style.color = "#26a15c"; 
+      pintarVideos(); 
+    }); 
+  }
+
+  pintarVideos(); 
+</script> 
+
+<!-- Supabase Client & Conexión -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const AV_SUPABASE_URL = 'https://onnzstykkintecvfkauz.supabase.co';
@@ -22,7 +95,7 @@ async function avCargarPublicados() {
   if (!zona) return;
   
   try {
-    const r = await AV_DB.from('recursos').select('*').eq('publicado', true).order('creado_en', { ascending: false });
+    const r = await AV_DB.from('recursos').select('id,tipo,categoria,titulo,descripcion,url,imagen_url').eq('publicado', true).order('creado_en', { ascending: false });
     if (r.error || !r.data || !r.data.length) return;
     
     r.data.forEach(x => {
@@ -42,7 +115,7 @@ async function avCargarPublicados() {
       }
     });
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error al cargar:", err);
   }
 }
 
