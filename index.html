@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aventura Fabulosa - Estudiantes</title>
+  <title>Aventura Fabulosa - Aprender también es una aventura</title>
   <style>
     :root {
       --azul: #2f80ed;
@@ -16,23 +16,39 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
     body { background-color: var(--azul-claro); color: var(--texto); display: flex; flex-direction: column; min-height: 100vh; }
-    header { background-color: var(--azul); color: var(--blanco); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    header h1 { font-size: 1.8rem; }
-    nav a { color: var(--blanco); text-decoration: none; margin-left: 1.5rem; font-weight: bold; font-size: 1.1rem; }
+    
+    header { background-color: var(--azul); color: var(--blanco); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+    header h1 { font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
+    nav a { color: var(--blanco); text-decoration: none; margin-left: 1rem; font-weight: bold; font-size: 1rem; }
     nav a:hover { color: var(--amarillo); }
+
+    .hero { background: var(--blanco); border-bottom: 5px solid var(--amarillo); padding: 2.5rem 1rem; text-align: center; }
+    .hero-content { max-width: 800px; margin: 0 auto; }
+    .hero h2 { color: var(--azul); font-size: 2.2rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.2rem; margin-bottom: 1.5rem; color: #444; line-height: 1.5; }
+    
     main { flex: 1; max-width: 1000px; width: 100%; margin: 2rem auto; padding: 0 1rem; }
-    .seccion-diaria { background: var(--blanco); border: 4px solid var(--azul); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; text-align: center; box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
-    .seccion-diaria h2 { color: var(--azul); font-size: 2rem; margin-bottom: 0.5rem; }
-    .seccion-diaria p { font-size: 1.1rem; margin-bottom: 1.5rem; color: #555; }
-    .tarjetas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-    .tarjeta { background: var(--blanco); border: 3px solid var(--amarillo); border-radius: 15px; padding: 1.5rem; text-align: left; box-shadow: 0 4px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+    
+    .seccion-tarjeta { background: var(--blanco); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 6px 12px rgba(0,0,0,0.05); text-align: center; }
+    .seccion-tarjeta h2 { color: var(--azul); font-size: 1.8rem; margin-bottom: 1rem; }
+
+    .grid-categorias { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .cat-item { background: var(--azul-claro); border: 2px solid var(--azul); border-radius: 15px; padding: 1rem; text-align: center; font-weight: bold; }
+    .cat-item span { display: block; font-size: 2rem; margin-bottom: 0.5rem; }
+
+    .tarjetas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; text-align: left; }
+    .tarjeta { background: var(--blanco); border: 3px solid var(--amarillo); border-radius: 15px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; }
     .tarjeta h3 { color: var(--azul); margin-bottom: 0.5rem; font-size: 1.3rem; }
     .tarjeta p { font-size: 1rem; margin-bottom: 1rem; color: #444; }
+
     .video-yt { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; margin-bottom: 1rem; border-radius: 10px; overflow: hidden; background: #000; }
     .video-yt iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-    .boton { display: inline-block; background-color: var(--amarillo); color: var(--texto); padding: 0.6rem 1.2rem; border-radius: 25px; text-decoration: none; font-weight: bold; text-align: center; transition: background 0.2s; }
-    .boton:hover { background-color: #ffd86b; }
-    footer { background-color: var(--azul); color: var(--blanco); text-align: center; padding: 1rem; margin-top: auto; font-size: 1rem; }
+
+    .boton { display: inline-block; background-color: var(--amarillo); color: var(--texto); padding: 0.8rem 1.6rem; border-radius: 25px; text-decoration: none; font-weight: bold; text-align: center; transition: transform 0.2s, background 0.2s; border: none; cursor: pointer; font-size: 1rem; }
+    .boton:hover { background-color: #ffd86b; transform: scale(1.03); }
+
+    footer { background-color: var(--azul); color: var(--blanco); text-align: center; padding: 2rem 1rem; margin-top: auto; }
+    footer a { color: var(--amarillo); text-decoration: none; margin: 0 0.5rem; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -40,30 +56,61 @@
   <header>
     <h1>🦸‍♀️ Aventura Fabulosa</h1>
     <nav>
-      <a href="index.html">Inicio</a>
-      <a href="admin.html">Administración</a>
+      <a href="#inicio">Inicio</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#juegos">Juegos</a>
+      <a href="#videos">Videos</a>
+      <a href="#contacto">Contacto</a>
+      <a href="admin.html" style="background: var(--amarillo); color: var(--texto); padding: 0.4rem 0.8rem; border-radius: 12px;">Admin</a>
     </nav>
   </header>
 
+  <section class="hero" id="inicio">
+    <div class="hero-content">
+      <h2>¡Aprender también es una aventura!</h2>
+      <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p>
+      <a href="#juegos" class="boton">¡Quiero jugar!</a>
+    </div>
+  </section>
+
   <main>
-    <section class="seccion-diaria">
-      <h2>📅 Video Informativo / Actividades del Día</h2>
-      <p>Aquí encontrarás el video diario con las orientaciones de las actividades de hoy.</p>
-      <div id="av-lista-informativos">
-        <p>Cargando video informativo...</p>
+    <section class="seccion-tarjeta" id="recursos">
+      <h2>Leer, jugar, descubrir, crear y soñar</h2>
+      <div class="grid-categorias">
+        <div class="cat-item"><span>📖</span> Leer<br><small>Cuentos y letras</small></div>
+        <div class="cat-item"><span>🎲</span> Jugar<br><small>Retos y memoria</small></div>
+        <div class="cat-item"><span>🔍</span> Descubrir<br><small>Ciencia y naturaleza</small></div>
+        <div class="cat-item"><span>🎨</span> Crear<br><small>Dibuja e inventa</small></div>
+        <div class="cat-item"><span>🌙</span> Soñar<br><small>Historias sin límites</small></div>
       </div>
     </section>
 
-    <section>
-      <h2>🌟 Todos los Recursos</h2>
-      <div id="av-lista-recursos" class="tarjetas-grid">
-        <p>Cargando recursos...</p>
+    <section class="seccion-tarjeta" id="videos">
+      <h2>🎬 Videos Explicativos y Películas</h2>
+      <div id="av-lista-informativos" class="tarjetas-grid">
+        <p>Cargando videos...</p>
       </div>
+    </section>
+
+    <section class="seccion-tarjeta" id="juegos">
+      <h2>🎮 ¡Más actividades te esperan!</h2>
+      <p style="margin-bottom: 1.5rem;">Practica con juegos, crucigramas, sopas de letras y retos de todo tipo en nuestra colección de Educaplay.</p>
+      <a href="https://www.educaplay.com/" target="_blank" class="boton">Ir a las actividades</a>
+    </section>
+
+    <section class="seccion-tarjeta" id="contacto">
+      <h2>Contacto</h2>
+      <p>¿Tienes ideas o preguntas? Escríbenos a <a href="mailto:tucorreo@ejemplo.com" style="color: var(--azul); font-weight: bold;">tucorreo@ejemplo.com</a></p>
     </section>
   </main>
 
   <footer>
-    <p>Aventura Fabulosa &copy; 2026 - Entorno Educativo Seguro</p>
+    <p>© 2026 Aventura Fabulosa. Hecho con ❤ para pequeños genios.</p>
+    <p style="margin-top: 0.8rem;">
+      <a href="https://www.educaplay.com/" target="_blank">Educaplay</a> | 
+      <a href="https://es.khanacademy.org/" target="_blank">Khan Academy</a> | 
+      <a href="#inicio">Volver arriba</a>
+    </p>
   </footer>
 
   <!-- Supabase Client -->
@@ -86,22 +133,19 @@
     }
 
     async function avCargarRecursos() {
-      const zona = document.getElementById('av-lista-recursos');
       const informativos = document.getElementById('av-lista-informativos');
-      if (!zona) return;
+      if (!informativos) return;
       
       const r = await avSb.from('recursos').select('*').eq('publicado', true).order('creado_en', { ascending: false });
       if (r.error) {
-        zona.innerHTML = '<p>Error al cargar el contenido.</p>';
+        informativos.innerHTML = '<p>Error al cargar el contenido.</p>';
         return;
       }
       
-      if (informativos) informativos.innerHTML = '';
-      zona.innerHTML = '';
+      informativos.innerHTML = '';
       
       if (!r.data || r.data.length === 0) {
-        zona.innerHTML = '<p>No hay contenido disponible por el momento.</p>';
-        if (informativos) informativos.innerHTML = '<p>No hay videos informativos hoy.</p>';
+        informativos.innerHTML = '<p>No hay contenido disponible por el momento.</p>';
         return;
       }
 
@@ -117,11 +161,7 @@
             (x.url ? '<a class="boton" href="' + x.url + '" target="_blank" rel="noopener">Abrir recurso</a>' : '')
           );
         
-        if (x.categoria === 'Videos informativos' && informativos) {
-          informativos.appendChild(art);
-        } else {
-          zona.appendChild(art);
-        }
+        informativos.appendChild(art);
       });
     }
 
