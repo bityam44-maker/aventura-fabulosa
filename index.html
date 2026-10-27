@@ -69,7 +69,6 @@
     } 
     nav a:hover { background:var(--amarillo); color:var(--azul); } 
 
-    /* HERO PRINCIPAL CON VIDEO */
     .hero { 
       background:linear-gradient(135deg,var(--azul),#56a8ff); 
       color:var(--blanco); 
@@ -79,7 +78,6 @@
     .hero h2 { font-size:clamp(2rem,6vw,3.2rem); margin-bottom:.5rem; } 
     .hero p { max-width:700px; margin:0 auto 1.5rem; font-size:1.25rem; } 
     
-    /* TARJETA DEL REPRODUCTOR PRINCIPAL */
     .tarjeta-video-principal { 
       background: var(--blanco); 
       border-radius: 28px; 
@@ -197,4 +195,150 @@
   <header> 
     <div class="barra"> 
       <div class="logo">
-        <span class="logo-icono"><img src="
+        <span class="logo-icono"><img src="https://cdn.gamma.app/qhtzn2y7sanewv8/agent-uploads/ZFhHcclUqXP46uT21c_Eu.png" alt=""></span> 
+        Aventura Fabulosa
+      </div> 
+      <nav>
+        <ul> 
+          <li><a href="#inicio">Inicio</a></li> 
+          <li><a href="#recursos">Recursos</a></li> 
+          <li><a href="#juegos">Juegos</a></li> 
+          <li><a href="#contacto">Contacto</a></li> 
+        </ul>
+      </nav> 
+    </div> 
+  </header> 
+
+  <main> 
+    <section class="hero" id="inicio"> 
+      <h2>¡Aprender también es una aventura!</h2> 
+      <p>Mira el video del día y explora un espacio seguro con actividades y juegos para aprender en casa o en el aula.</p> 
+      
+      <article class="tarjeta-video-principal">
+        <h3 id="titulo-video">Cargando video del día...</h3>
+        <p id="desc-video"></p>
+        <div class="contenedor-video" id="visor-video-unico"></div>
+      </article>
+
+      <a class="boton" href="#juegos">¡Quiero jugar!</a> 
+    </section> 
+
+    <section id="recursos"> 
+      <div class="contenedor"> 
+        <h2 class="titulo-seccion">Leer, jugar, descubrir, crear y soñar</h2> 
+        <div class="cuadricula"> 
+          <article class="tarjeta"><h3>📖 Leer</h3><p>Cuentos, letras y palabras para mejorar la lectura.</p></article> 
+          <article class="tarjeta"><h3>🎲 Jugar</h3><p>Retos, memoria y juegos de lógica para divertirse.</p></article> 
+          <article class="tarjeta"><h3>🔍 Descubrir</h3><p>Animales, países, ciencias y mucho más por explorar.</p></article> 
+          <article class="tarjeta"><h3>🎨 Crear</h3><p>Dibuja, colorea e inventa tus propias ideas.</p></article> 
+          <article class="tarjeta"><h3>🌙 Soñar</h3><p>Historias e imaginación para viajar sin límites.</p></article> 
+        </div> 
+      </div> 
+    </section> 
+
+    <section class="juego" id="juegos"> 
+      <div class="contenedor"> 
+        <h2 class="titulo-seccion">¡Zona de minijuegos!</h2> 
+        <div class="pestanas"> 
+          <button class="pestana activa" data-juego="j1" type="button">📖 Leer</button> 
+          <button class="pestana" data-juego="j2" type="button">🎲 Jugar</button> 
+          <button class="pestana" data-juego="j3" type="button">🔍 Descubrir</button> 
+          <button class="pestana" data-juego="j4" type="button">🎨 Crear</button> 
+          <button class="pestana" data-juego="j5" type="button">🌙 Soñar</button> 
+        </div> 
+        <div class="panel marco" id="j1"><iframe title="Leer" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j2" hidden><iframe title="Jugar" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j3" hidden><iframe title="Descubrir" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j4" hidden><iframe title="Crear" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
+        <div class="panel marco" id="j5" hidden><iframe title="Soñar" src="https://es.educaplay.com/" loading="lazy" allowfullscreen></iframe></div> 
+      </div> 
+    </section> 
+
+    <section> 
+      <div class="actividades"> 
+        <h2>🎮 ¡Más actividades te esperan!</h2> 
+        <p>Practica con juegos, crucigramas, sopas de letras y retos de todo tipo en nuestra colección de Educaplay.</p> 
+        <a class="boton" href="https://es.educaplay.com/" target="_blank" rel="noopener">Ir a las actividades</a> 
+      </div> 
+    </section> 
+
+    <section class="contacto" id="contacto"> 
+      <div class="contenedor"> 
+        <h2 class="titulo-seccion">Contacto</h2> 
+        <p>¿Tienes ideas o preguntas? Escríbenos a <a href="mailto:tucorreo@ejemplo.com">tucorreo@ejemplo.com</a></p> 
+      </div> 
+    </section> 
+  </main> 
+
+  <footer> 
+    <p>© <span id="anio"></span> Aventura Fabulosa. Hecho con ❤ para pequeños genios.</p> 
+    <p><a href="https://es.educaplay.com/" target="_blank" rel="noopener">Educaplay</a> <a href="https://es.khanacademy.org/" target="_blank" rel="noopener">Khan Academy</a> <a href="#inicio">Volver arriba</a></p> 
+  </footer> 
+
+  <script> 
+    document.getElementById("anio").textContent = new Date().getFullYear(); 
+    document.querySelectorAll(".pestana").forEach(p => { 
+      p.addEventListener("click", () => { 
+        document.querySelectorAll(".pestana").forEach(x => x.classList.remove("activa")); 
+        document.querySelectorAll(".panel").forEach(x => x.hidden = true); 
+        p.classList.add("activa"); 
+        document.getElementById(p.dataset.juego).hidden = false; 
+      }); 
+    }); 
+
+    function procesarEnlaceVideo(url) { 
+      if (!url) return null; 
+      let yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/); 
+      if (yt) return { tipo: "iframe", src: "https://www.youtube.com/embed/" + yt[1] }; 
+      let drive = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/drive\.google\.com\/open\?id=([\w-]+)/); 
+      if (drive) return { tipo: "iframe", src: "https://drive.google.com/file/d/" + drive[1] + "/preview" }; 
+      return { tipo: "directo", src: url }; 
+    } 
+
+    function mostrarEnContenedor(url, contenedor) { 
+      const info = procesarEnlaceVideo(url); 
+      if (!info) return; 
+      contenedor.innerHTML = ""; 
+      if (info.tipo === "directo") { 
+        contenedor.innerHTML = '<video src="' + info.src + '" controls playsinline style="width:100%;height:100%;"></video>'; 
+      } else { 
+        contenedor.innerHTML = '<iframe src="' + info.src + '" title="Video" loading="lazy" allowfullscreen style="width:100%;height:100%;border:0;"></iframe>'; 
+      } 
+    } 
+  </script> 
+
+  <!-- CONEXIÓN DIRECTA CON SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> 
+  <script> 
+    const AV_SUPABASE_URL = 'https://onnzstykkintecvfkauz.supabase.co'; 
+    const AV_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ubnpzdHlra2ludGVjdmZrYXV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxNzAyMDIsImV4cCI6MjA1NTc0NjIwMn0.2w1ZpP6_V3HwJp031A_32Z523P6_V3HwJp031A'; 
+
+    async function cargarVideoUnicoDesdeAdmin(){ 
+      const visor = document.getElementById('visor-video-unico'); 
+      const tituloElem = document.getElementById('titulo-video');
+      const descElem = document.getElementById('desc-video');
+
+      try {
+        const client = window.supabase.createClient(AV_SUPABASE_URL, AV_SUPABASE_KEY); 
+        const r = await client.from('recursos').select('id,tipo,categoria,titulo,descripcion,url').eq('publicado',true).order('creado_en',{ascending:false}).limit(1); 
+        
+        if (r.error || !r.data || !r.data.length) { 
+          tituloElem.textContent = "¡Bienvenido a Aventura Fabulosa!"; 
+          visor.innerHTML = '<p style="color:#fff; padding:3rem; text-align:center;">Pronto publicaremos un nuevo video aquí.</p>'; 
+          return; 
+        } 
+
+        const video = r.data[0]; 
+        tituloElem.textContent = video.titulo; 
+        descElem.textContent = video.descripcion || ''; 
+        mostrarEnContenedor(video.url, visor); 
+      } catch (e) {
+        tituloElem.textContent = "¡Bienvenido a Aventura Fabulosa!";
+        visor.innerHTML = '<p style="color:#fff; padding:3rem; text-align:center;">Pronto publicaremos un nuevo video aquí.</p>';
+      }
+    } 
+
+    cargarVideoUnicoDesdeAdmin(); 
+  </script> 
+</body>
+</html>
