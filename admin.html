@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Administración | Aventura Fabulosa</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--azul:#2f80ed;--azul-claro:#e3f0ff;--amarillo:#ffc940;--verde:#3ccf7a;--rojo:#ff6b6b;--texto:#1f2d4d;--blanco:#fff}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:var(--texto);background:var(--azul-claro)}header{background:var(--azul);color:#fff;padding:22px;text-align:center}main{max-width:980px;margin:30px auto;padding:0 18px}.panel{background:#fff;border-radius:20px;padding:24px;box-shadow:0 6px 20px #1f2d4d22;margin-bottom:22px}h1,h2{margin-top:0}input,textarea,select{width:100%;padding:12px;margin:6px 0 14px;border:2px solid #b8d5f7;border-radius:10px;font-size:16px}textarea{min-height:90px;resize:vertical}button{border:0;border-radius:999px;padding:12px 20px;font-weight:bold;cursor:pointer;background:var(--amarillo);color:var(--texto);margin:4px}button.sec{background:var(--azul);color:#fff}button.danger{background:var(--rojo);color:#fff}.oculto{display:none}.mensaje{min-height:24px;font-weight:bold}.recurso{border:2px solid #d8e9fb;border-radius:14px;padding:16px;margin:12px 0;background:#fafdff}.recurso h3{margin:0 0 5px}.meta{font-size:13px;color:#557}.fila{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:650px){.fila{grid-template-columns:1fr}}
+a{color:var(--azul);font-weight:bold}
+</style>
+</head>
+<body>
+<header><h1>🦸‍♀️ Aventura Fabulosa</h1><p>Panel privado de administración</p></header>
+<main>
+<section id="login" class="panel">
+<h2>Acceso de administradora</h2>
+<form id="loginForm"><label>Correo electrónico</label><input id="email" type="email" required><label>Contraseña</label><input id="password" type="password" required><button class="sec">Entrar</button></form>
+<p id="loginMsg" class="mensaje"></p>
+</section>
+<section id="app" class="oculto">
+<div class="panel"><button id="logout" class="danger">Cerrar sesión</button><h2>Añadir recurso</h2>
+<form id="resourceForm"><div class="fila"><div><label>Tipo</label><select id="tipo"><option value="video">Video</option><option value="juego">Juego</option><option value="actividad">Actividad</option><option value="material">Material</option></select></div><div><label>Categoría</label><select id="categoria"><option>Leer</option><option>Jugar</option><option>Descubrir</option><option>Crear</option><option>Soñar</option></select></div></div><label>Título</label><input id="titulo" required><label>Descripción</label><textarea id="descripcion"></textarea><label>Enlace de YouTube, juego o actividad</label><input id="url" type="url" placeholder="https://..."><label>Enlace de archivo o imagen (opcional)</label><input id="archivo_url" type="url" placeholder="https://..."><label><input id="publicado" type="checkbox" style="width:auto"> Publicar ahora</label><br><button>Guardar recurso</button></form><p id="saveMsg" class="mensaje"></p></div>
+<div class="panel"><h2>Recursos guardados</h2><button id="reload" class="sec">Actualizar lista</button><div id="lista"></div></div>
+</section>
+</main>
+<script>
+const SUPABASE_URL='https://onnzstykkintecvfkauz.supabase.co';
+const SUPABASE_KEY='sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+function msg(id,text,ok=false){$(id).textContent=text;$(id).style.color=ok?'#168a4a':'#c0392b'}
+async function cargar(){const {data,error}=await db.from('recursos').select('*').order('creado_en',{ascending:false});if(error){msg('saveMsg','No se pudo cargar la lista: '+error.message);return}const lista=$('lista');lista.innerHTML=data.length?'':'<p>Aún no hay recursos.</p>';data.forEach(r=>{const div=document.createElement('div');div.className='recurso';div.innerHTML=`<h3>${r.titulo}</h3><div class="meta">${r.tipo} · ${r.categoria} · ${r.publicado?'Publicado':'Oculto'}</div><p>${r.descripcion||''}</p>${r.url?`<a href="${r.url}" target="_blank" rel="noopener">Abrir enlace</a>`:''}<br><button class="danger" data-id="${r.id}">Eliminar</button>`;div.querySelector('button').onclick=async()=>{if(confirm('¿Eliminar este recurso?')){await db.from('recursos').delete().eq('id',r.id);cargar()}};lista.appendChild(div)})}
+$('loginForm').onsubmit=async e=>{e.preventDefault();const {error}=await db.auth.signInWithPassword({email:$('email').value,password:$('password').value});if(error){msg('loginMsg','Correo o contraseña incorrectos.')}else{mostrar();msg('loginMsg','',true)}};
+$('logout').onclick=async()=>{await db.auth.signOut();mostrar()};$('reload').onclick=cargar;
+$('resourceForm').onsubmit=async e=>{e.preventDefault();const {data:{user}}=await db.auth.getUser();const {error}=await db.from('recursos').insert({tipo:$('tipo').value,categoria:$('categoria').value,titulo:$('titulo').value,descripcion:$('descripcion').value,url:$('url').value||null,archivo_url:$('archivo_url').value||null,publicado:$('publicado').checked,creado_por:user.id});if(error){msg('saveMsg','Error: '+error.message)}else{msg('saveMsg','Recurso guardado correctamente.',true);e.target.reset();cargar()}};
+async function mostrar(){const {data:{session}}=await db.auth.getSession();$('login').classList.toggle('oculto',!!session);$('app').classList.toggle('oculto',!session);if(session)cargar()}mostrar();
+</script>
+</body></html>
