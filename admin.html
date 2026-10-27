@@ -56,7 +56,7 @@ $('resourceForm').onsubmit=async e=>{
   if(error){
     msg('saveMsg','Error: '+error.message);
   }else{
-    msg('saveMsg','¡Guardado correctamente! (Juego del día actualizado)',true);
+    msg('saveMsg','¡Guardado correctamente!',true);
     e.target.reset();
     cargar();
   }
