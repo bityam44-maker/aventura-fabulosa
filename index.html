@@ -136,6 +136,65 @@
     .boton:hover { transform: translateY(-3px); }
     .boton.verde { background: var(--verde); box-shadow: 0 5px 0 #26a15c; color: var(--blanco); }
 
+    /* Estilos para la Ventana Flotante (Modal) del Juego */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .modal-overlay[hidden] { display: none; }
+    .modal-contenido {
+      background: var(--blanco);
+      width: 100%;
+      max-width: 900px;
+      border-radius: 24px;
+      border: 6px solid var(--verde);
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      background: var(--verde);
+      color: var(--blanco);
+      padding: .8rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    .modal-cerrar {
+      background: var(--rojo);
+      color: var(--blanco);
+      border: none;
+      font-size: 1.2rem;
+      font-weight: bold;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 3px 0 #c94646;
+    }
+    .modal-cerrar:hover { transform: scale(1.05); }
+    .modal-body {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+    .modal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     .cuadricula { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
     .tarjeta { 
       background: var(--blanco); 
@@ -228,17 +287,30 @@
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
-      <!-- RECUADRO 2: Juego del Día (Con acceso directo seguro al juego específico) -->
+      <!-- RECUADRO 2: Juego del Día (Con botón para abrir ventana flotante) -->
       <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
         <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
         <p id="desc-juego-principal"></p>
         <div style="padding: 1.2rem 0; text-align: center;">
-          <a id="enlace-juego-principal" class="boton verde" href="#" target="_blank" rel="noopener">🎮 ¡Jugar el Juego del Día!</a>
+          <button id="btn-abrir-juego" class="boton verde" type="button">🎮 ¡Jugar el Juego del Día!</button>
         </div>
       </article>
 
       <a class="boton" href="#juegos">¡Quiero jugar!</a>
     </section>
+
+    <!-- VENTANA FLOTANTE (MODAL) DEL JUEGO -->
+    <div class="modal-overlay" id="modal-juego" hidden>
+      <div class="modal-contenido">
+        <div class="modal-header">
+          <span id="modal-titulo-texto">Juego del Día</span>
+          <button class="modal-cerrar" id="btn-cerrar-juego" type="button">✕</button>
+        </div>
+        <div class="modal-body">
+          <iframe id="iframe-modal-juego" src="" title="Juego del Día" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
 
     <section id="recursos">
       <div class="contenedor">
@@ -351,24 +423,49 @@
           tarjetaVideo.style.display = 'block';
         }
 
-        // 2. Mostrar Recuadro de Juego del Día con su Botón Directo al juego exacto
+        // 2. Configurar Recuadro y Ventana Flotante del Juego del Día
         if (juego && juego !== video) {
           const tarjetaJuego = document.getElementById('tarjeta-juego-principal');
           const tituloJuego = document.getElementById('titulo-juego-principal');
           const descJuego = document.getElementById('desc-juego-principal');
-          const btnJuego = document.getElementById('enlace-juego-principal');
+          const btnAbrir = document.getElementById('btn-abrir-juego');
+          const modalJuego = document.getElementById('modal-juego');
+          const btnCerrar = document.getElementById('btn-cerrar-juego');
+          const iframeModal = document.getElementById('iframe-modal-juego');
+          const modalTitulo = document.getElementById('modal-titulo-texto');
 
           if (juego.titulo) {
             tituloJuego.textContent = juego.titulo;
             tituloJuego.style.display = 'block';
+            modalTitulo.textContent = juego.titulo;
           }
           if (juego.descripcion) {
             descJuego.textContent = juego.descripcion;
             descJuego.style.display = 'block';
           }
-          if (juego.url) {
-            btnJuego.href = juego.url;
-          }
+
+          // Al hacer clic en el botón, abre el modal cargando la URL exacta de Educaplay en un iframe flotante
+          btnAbrir.addEventListener("click", () => {
+            if (juego.url) {
+              iframeModal.src = juego.url;
+            }
+            modalJuego.hidden = false;
+          });
+
+          // Cerrar ventana flotante
+          btnCerrar.addEventListener("click", () => {
+            modalJuego.hidden = true;
+            iframeModal.src = ""; // Detiene el juego al cerrar
+          });
+
+          // Cerrar haciendo clic fuera de la ventana
+          modalJuego.addEventListener("click", (e) => {
+            if (e.target === modalJuego) {
+              modalJuego.hidden = true;
+              iframeModal.src = "";
+            }
+          });
+
           tarjetaJuego.style.display = 'block';
         }
 
