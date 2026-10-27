@@ -28,7 +28,9 @@ async function avCargarPublicados() {
     r.data.forEach(x => {
       const art = document.createElement('article');
       art.className = 'tarjeta';
-      const emb = avUniversalEmbed(x.url);
+      
+      // Validamos que el tipo sea 'video' para usar el reproductor, tal como lo tenías funcionando
+      const emb = (x.tipo === 'video') ? avUniversalEmbed(x.url) : null;
       
       art.innerHTML = '<h3>' + x.titulo + '</h3>' + 
         '<p>' + ((x.descripcion || '').replace(/[<>]/g, '')) + '</p>' + 
