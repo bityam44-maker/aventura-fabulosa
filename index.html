@@ -228,11 +228,13 @@
         <div class="contenedor-video-unico" id="visor-video-principal"></div>
       </article>
 
-      <!-- RECUADRO 2: Juego del Día -->
+      <!-- RECUADRO 2: Juego del Día (Con botón interactivo directo) -->
       <article class="tarjeta-video-principal" id="tarjeta-juego-principal" style="display:none; border-color: var(--verde);">
         <h3 id="titulo-juego-principal" style="color: var(--verde);"></h3>
         <p id="desc-juego-principal"></p>
-        <div class="contenedor-video-unico" id="visor-juego-principal"></div>
+        <div style="padding: 1rem 0; text-align: center;">
+          <a id="enlace-juego-principal" class="boton verde" href="#" target="_blank" rel="noopener">🎮 ¡Jugar Ahora!</a>
+        </div>
       </article>
 
       <a class="boton" href="#juegos">¡Quiero jugar!</a>
@@ -319,7 +321,6 @@
       const API_KEY_SUPABASE = 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH'; 
 
       try {
-        // Traemos todos los recursos publicados ordenados del más nuevo al más viejo
         const respuesta = await fetch(URL_SUPABASE + '/rest/v1/recursos?publicado=eq.true&select=tipo,titulo,descripcion,url&order=creado_en.desc', {
           headers: { 'apikey': API_KEY_SUPABASE }
         });
@@ -328,7 +329,6 @@
         const datos = await respuesta.json();
         if (!datos || datos.length === 0) return;
 
-        // Separamos automáticamente los que encuentren por tipo o tomamos los primeros disponibles
         const video = datos.find(r => r.tipo === 'video' || r.tipo === 'Video') || datos[0];
         const juego = datos.find(r => r.tipo === 'juego_del_dia' || r.tipo === 'juego_dia' || r.tipo === 'juego') || (datos.length > 1 ? datos[1] : null);
 
@@ -351,12 +351,12 @@
           tarjetaVideo.style.display = 'block';
         }
 
-        // 2. Mostrar Recuadro de Juego del Día
+        // 2. Mostrar Recuadro de Juego del Día con su Botón de Acceso
         if (juego && juego !== video) {
           const tarjetaJuego = document.getElementById('tarjeta-juego-principal');
           const tituloJuego = document.getElementById('titulo-juego-principal');
           const descJuego = document.getElementById('desc-juego-principal');
-          const visorJuego = document.getElementById('visor-juego-principal');
+          const btnJuego = document.getElementById('enlace-juego-principal');
 
           if (juego.titulo) {
             tituloJuego.textContent = juego.titulo;
@@ -366,7 +366,9 @@
             descJuego.textContent = juego.descripcion;
             descJuego.style.display = 'block';
           }
-          mostrarEnContenedor(juego.url, visorJuego);
+          if (juego.url) {
+            btnJuego.href = juego.url;
+          }
           tarjetaJuego.style.display = 'block';
         }
 
