@@ -1,163 +1,51 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aventura Fabulosa</title>
-  <style>
-    :root {
-      --azul: #2f80ed;
-      --azul-claro: #e3f0ff;
-      --amarillo: #ffc940;
-      --verde: #3ccf7a;
-      --rojo: #ff6b6b;
-      --blanco: #fff;
-      --texto: #1f2d4d;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
-    body { background-color: var(--azul); color: var(--blanco); display: flex; flex-direction: column; min-height: 100vh; }
-    
-    header { background-color: var(--azul); color: var(--blanco); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--amarillo); }
-    header h1 { font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
-    nav a { color: var(--blanco); text-decoration: none; margin-left: 1.5rem; font-weight: bold; font-size: 1.1rem; }
-    nav a:hover { color: var(--amarillo); }
+Aventura Fabulosa
+Inicio
+Recursos
+Juegos
+Videos
+Contacto
+Superhéroe señalando con una pizarra que dice: Aprender también es una aventura
+¡Aprender también es una aventura!
+Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.
 
-    .hero-banner { max-width: 900px; margin: 2rem auto; padding: 0 1rem; text-align: center; }
-    .hero-banner img { width: 100%; border: 5px solid var(--amarillo); border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
-    
-    .hero-text { text-align: center; margin: 2rem auto; max-width: 800px; padding: 0 1rem; }
-    .hero-text h2 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--blanco); text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-    .hero-text p { font-size: 1.2rem; margin-bottom: 1.5rem; line-height: 1.6; }
+¡Quiero jugar!
+Leer, jugar, descubrir, crear y soñar
+📖 Leer
+Cuentos, letras y palabras para mejorar la lectura.
 
-    main { flex: 1; max-width: 1000px; width: 100%; margin: 0 auto 3rem auto; padding: 0 1rem; }
-    
-    .seccion-tarjeta { background: var(--blanco); color: var(--texto); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 6px 12px rgba(0,0,0,0.1); text-align: center; }
-    .seccion-tarjeta h2 { color: var(--azul); font-size: 2rem; margin-bottom: 1.5rem; }
+🎲 Jugar
+Retos, memoria y juegos de lógica para divertirse.
 
-    .grid-categorias { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-    .cat-item { background: var(--azul-claro); border: 2px solid var(--azul); border-radius: 15px; padding: 1rem; text-align: center; font-weight: bold; color: var(--texto); }
-    .cat-item span { display: block; font-size: 2rem; margin-bottom: 0.5rem; }
+🔍 Descubrir
+Animales, países, ciencias y mucho más por explorar.
 
-    .tarjetas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; text-align: left; }
-    .tarjeta { background: var(--blanco); border: 3px solid var(--amarillo); border-radius: 15px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-    .tarjeta h3 { color: var(--azul); margin-bottom: 0.5rem; font-size: 1.3rem; }
-    .tarjeta p { font-size: 1rem; margin-bottom: 1rem; color: #444; }
+🎨 Crear
+Dibuja, colorea e inventa tus propias ideas.
 
-    .video-yt { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; margin-bottom: 1rem; border-radius: 10px; overflow: hidden; background: #000; }
-    .video-yt iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+🌙 Soñar
+Historias e imaginación para viajar sin límites.
 
-    .boton { display: inline-block; background-color: var(--amarillo); color: var(--texto); padding: 0.8rem 1.6rem; border-radius: 25px; text-decoration: none; font-weight: bold; text-align: center; transition: transform 0.2s, background 0.2s; border: none; cursor: pointer; font-size: 1rem; }
-    .boton:hover { background-color: #ffd86b; transform: scale(1.03); }
+¡Zona de minijuegos!
+📖 Leer
+🎲 Jugar
+🔍 Descubrir
+🎨 Crear
+🌙 Soñar
 
-    footer { background-color: #1a52b8; color: var(--blanco); text-align: center; padding: 2rem 1rem; margin-top: auto; }
-    footer a { color: var(--amarillo); text-decoration: none; margin: 0 0.5rem; font-weight: bold; }
-  </style>
-</head>
-<body>
+🎬 Videos explicativos
+Pega aquí el enlace de YouTube o Google Drive
+➕ Agregar video
 
-  <header>
-    <h1>🦸‍♂️ Aventura Fabulosa</h1>
-    <nav>
-      <a href="#inicio">Inicio</a>
-      <a href="#recursos">Recursos</a>
-      <a href="#juegos">Juegos</a>
-      <a href="#videos">Videos</a>
-      <a href="#contacto">Contacto</a>
-    </nav>
-  </header>
+Mi primer video
+Video de YouTube
 
-  <!-- Banner del Superhéroe -->
-  <div class="hero-banner">
-    <img src="banner.png" alt="Aprender también es una aventura" onerror="this.src='https://raw.githubusercontent.com/bityam44-maker/aventura-fabulosa/main/banner.png'">
-  </div>
+🎮 ¡Más actividades te esperan!
+Practica con juegos, crucigramas, sopas de letras y retos de todo tipo en nuestra colección de Educaplay.
 
-  <div class="hero-text" id="inicio">
-    <h2>¡Aprender también es una aventura!</h2>
-    <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p>
-    <a href="#juegos" class="boton">¡Quiero jugar!</a>
-  </div>
+Ir a las actividades
+Contacto
+¿Tienes ideas o preguntas? Escríbenos a tucorreo@ejemplo.com
 
-  <main>
-    <!-- Categorías -->
-    <section class="seccion-tarjeta" id="recursos">
-      <h2>Leer, jugar, descubrir, crear y soñar</h2>
-      <div class="grid-categorias">
-        <div class="cat-item"><span>📖</span> Leer<br><small>Cuentos y letras</small></div>
-        <div class="cat-item"><span>🎲</span> Jugar<br><small>Retos y memoria</small></div>
-        <div class="cat-item"><span>🔍</span> Descubrir<br><small>Ciencia y naturaleza</small></div>
-        <div class="cat-item"><span>🎨</span> Crear<br><small>Dibuja e inventa</small></div>
-        <div class="cat-item"><span>🌙</span> Soñar<br><small>Historias sin límites</small></div>
-      </div>
-    </section>
+© 2026 Aventura Fabulosa. Hecho con ❤ para pequeños genios.
 
-    <!-- Videos / Películas del día -->
-    <section class="seccion-tarjeta" id="videos">
-      <h2>🎬 Videos explicativos</h2>
-      <div id="av-lista-informativos" class="tarjetas-grid">
-        <p>Cargando video informativo...</p>
-      </div>
-    </section>
-
-    <!-- Zona de Minijuegos y Educaplay -->
-    <section class="seccion-tarjeta" id="juegos">
-      <h2>🎮 ¡Más actividades te esperan!</h2>
-      <p style="margin-bottom: 1.5rem; color: #444;">Practica con juegos, crucigramas, sopas de letras y retos de todo tipo en nuestra colección de Educaplay.</p>
-      <a href="https://www.educaplay.com/" target="_blank" class="boton">Ir al juego</a>
-    </section>
-
-    <!-- Contacto -->
-    <section class="seccion-tarjeta" id="contacto">
-      <h2>Contacto</h2>
-      <p style="color: #444;">¿Tienes ideas o preguntas? Escríbenos a <a href="mailto:tucorreo@ejemplo.com" style="color: var(--azul); font-weight: bold;">tucorreo@ejemplo.com</a></p>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2026 Aventura Fabulosa. Hecho con ❤ para pequeños genios.</p>
-    <p style="margin-top: 0.8rem;">
-      <a href="https://www.educaplay.com/" target="_blank">Educaplay</a> | 
-      <a href="https://es.khanacademy.org/" target="_blank">Khan Academy</a> | 
-      <a href="#inicio">Volver arriba</a>
-    </p>
-  </footer>
-
-  <!-- Supabase Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const AV_SUPABASE_URL = 'https://onnzstykkintecvfkauz.supabase.co';
-    const AV_SUPABASE_KEY = 'sb_publishable_sWD1DpzQXJheMn5T1sLB1g_bo2sUMFH';
-    const avSb = window.supabase.createClient(AV_SUPABASE_URL, AV_SUPABASE_KEY);
-
-    function avYoutubeEmbed(url) {
-      if (!url) return null;
-      let m;
-      if ((m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/))([\w-]{11})/))) {
-        return 'https://www.youtube.com/embed/' + m[1];
-      }
-      if ((m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/)) || (m = url.match(/drive\.google\.com\/open\?id=([\w-]+)/))) {
-        return 'https://drive.google.com/file/d/' + m[1] + '/preview';
-      }
-      return null;
-    }
-
-    async function avCargarRecursos() {
-      const informativos = document.getElementById('av-lista-informativos');
-      if (!informativos) return;
-      
-      const r = await avSb.from('recursos').select('*').eq('publicado', true).order('creado_en', { ascending: false });
-      if (r.error) {
-        informativos.innerHTML = '<p>Error al cargar el contenido.</p>';
-        return;
-      }
-      
-      informativos.innerHTML = '';
-      
-      if (!r.data || r.data.length === 0) {
-        informativos.innerHTML = '<p>No hay contenido disponible por el momento.</p>';
-        return;
-      }
-
-      r.data.forEach(x => {
-        const art = document.createElement('article');
-        art.className = 'tarjeta';
-        const emb = avYoutubeEmbed(x.url);
+Educaplay Khan Academy Volver arriba
