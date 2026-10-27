@@ -208,7 +208,7 @@
 </head>
 <body>
 
-  <header> 
+  <header id="inicio"> 
     <div class="barra"> 
       <div class="logo">
         <span class="logo-icono"><img src="https://cdn.gamma.app/qhtzn2y7sanewv8/agent-uploads/ZFhHcclUqXP46uT21c_Eu.png" alt=""></span> 
@@ -226,7 +226,7 @@
   </header> 
 
   <main> 
-    <section class="hero" id="inicio"> 
+    <section class="hero"> 
       <img class="banner" src="https://cdn.gamma.app/qhtzn2y7sanewv8/agent-uploads/ZFhHcclUqXP46uT21c_Eu.png" alt="Aprender también es una aventura"> 
       <h2>¡Aprender también es una aventura!</h2> 
       <p>Niños: ¡lean, jueguen, descubran y creen! Papás y maestros: un espacio gratuito y seguro con juegos de todo tipo para aprender en casa o en el aula.</p> 
@@ -254,7 +254,7 @@
       </div> 
     </section> 
 
-    <!-- ZONA DE MINIJUEGOS CON LOS JUEGUITOS ORIGINALES POR PESTAÑA -->
+    <!-- ZONA DE MINIJUEGOS CON PESTAÑAS FUNCIONALES -->
     <section class="juego" id="juegos"> 
       <div class="contenedor"> 
         <h2 class="titulo-seccion">¡Zona de minijuegos!</h2> 
@@ -266,7 +266,6 @@
           <button class="pestana" data-juego="j5" type="button">🌙 Soñar</button> 
         </div> 
 
-        <!-- CADA PESTAÑA CON SU JUEGUITO ESPECÍFICO -->
         <div class="panel marco" id="j1"><iframe title="Leer" src="https://es.educaplay.com/recursos-educativos/tipo/sopa-de-letras/" loading="lazy" allowfullscreen></iframe></div> 
         <div class="panel marco" id="j2" hidden><iframe title="Jugar" src="https://es.educaplay.com/recursos-educativos/tipo/memoria/" loading="lazy" allowfullscreen></iframe></div> 
         <div class="panel marco" id="j3" hidden><iframe title="Descubrir" src="https://es.educaplay.com/recursos-educativos/tipo/adivinanza/" loading="lazy" allowfullscreen></iframe></div> 
@@ -299,9 +298,10 @@
   <script> 
     document.getElementById("anio").textContent = new Date().getFullYear(); 
     
-    // Control de pestañas de minijuegos
+    // Control exclusivo de pestañas de minijuegos (sin interferir con botones)
     document.querySelectorAll(".pestana").forEach(p => { 
-      p.addEventListener("click", () => { 
+      p.addEventListener("click", (e) => { 
+        e.preventDefault();
         document.querySelectorAll(".pestana").forEach(x => x.classList.remove("activa")); 
         document.querySelectorAll(".panel").forEach(x => x.hidden = true); 
         p.classList.add("activa"); 
